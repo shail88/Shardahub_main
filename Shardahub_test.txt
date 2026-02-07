@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shardahub</title>
+</head>
+<body>
+    <h1>Welcome to Shardahub!</h1>
+    <p>Coming Soon: AI Tools & SaaS Apps</p>
+</body>
+</html>
