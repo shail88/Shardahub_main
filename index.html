@@ -3,96 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShardaHub | Professional Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
-    <style>
-        /* Custom ShardHub Brand Colors */
-        :root { --brand-blue: #0f172a; --gold-premium: #f59e0b; }
-        .sidebar-link:hover { background-color: #1e293b; color: white; }
-    </style>
+    <title>ShardaHub | The Hub for Shop, Games, AI & More</title>
+    <meta name="description"
+        content="Welcome to ShardaHub - The central hub for all your needs including Shop, Games, AI Tools, SaaS, Templates, and Robotics.">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-gray-50 font-sans">
-
-    <!-- GLOBAL TOP NAVIGATION (Same for all subdomains) -->
-    <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
-        <div class="px-3 py-3 lg:px-5 lg:pl-3">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center justify-start">
-                    <a href="https://xyz.com" class="flex ml-2 md:mr-24">
-                        <span class="self-center text-xl font-bold sm:text-2xl whitespace-nowrap text-slate-900">SHARD<span class="text-blue-600">HUB</span></span>
+<body>
+    <!-- Sidebar Mobile Toggle -->
+    <button class="btn btn-primary d-md-none position-fixed top-0 start-0 m-3 z-3" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+        <i class="bi bi-list fs-4"></i>
+    </button>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Sidebar -->
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark sidebar-container offcanvas-md offcanvas-start"
+                tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-4 text-white min-vh-100">
+                    <a href="/"
+                        class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-4 fw-bold d-none d-sm-inline brand-text">ShardaHub</span>
+                        <i class="bi bi-layers-half fs-2 d-sm-none"></i>
                     </a>
-                </div>
-                <!-- TOP MENU LINKS -->
-                <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600">
-                    <a href="https://shardahub.com" class="hover:text-blue-600">Home</a>
-                    <a href="" class="hover:text-blue-600">SaaS</a>
-                    <a href="" class="hover:text-blue-600">AI Tools</a>
-                    <a href="https://shop.shardahub.com" class="hover:text-blue-600">Shop</a>
-                    <a href="" class="hover:text-blue-600">Courses</a>
-                </div>
-                <div class="flex items-center">
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">Login</button>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100 mt-4"
+                        id="menu">
+                        <li class="nav-item w-100">
+                            <a href="#" class="nav-link align-middle px-0 active">
+                                <i class="fs-4 bi-house-door"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="#shop" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-bag-check"></i> <span class="ms-1 d-none d-sm-inline">Shop</span> </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="#games" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-controller"></i> <span class="ms-1 d-none d-sm-inline">Games</span>
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="#ai-tools" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-cpu"></i> <span class="ms-1 d-none d-sm-inline">AI Tools</span> </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="#saas" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-cloud-check"></i> <span class="ms-1 d-none d-sm-inline">SaaS</span>
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="#templates" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-columns-gap"></i> <span
+                                    class="ms-1 d-none d-sm-inline">Templates</span> </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="#robotics" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-robot"></i> <span class="ms-1 d-none d-sm-inline">Robotics</span> </a>
+                        </li>
+                        <li class="nav-item w-100 mt-4 border-top border-secondary pt-2">
+                            <a href="#about" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-info-circle"></i> <span class="ms-1 d-none d-sm-inline">About
+                                    Us</span> </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="#contact" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-envelope"></i> <span class="ms-1 d-none d-sm-inline">Contact</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </nav>
-
-    <!-- SIDEBAR (Expert Dashboard Style) -->
-    <aside class="fixed left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0" aria-label="Sidebar">
-        <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
-            <ul class="space-y-2 font-medium">
-                <li>
-                    <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg sidebar-link">
-                        <i class="fa-solid fa-chart-pie w-5 h-5"></i>
-                        <span class="ml-3">Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="" class="flex items-center p-2 text-gray-900 rounded-lg sidebar-link group">
-                        <i class="fa-solid fa-robot w-5 h-5"></i>
-                        <span class="flex-1 ml-3 whitespace-nowrap">AI Tools</span>
-                        <span class="inline-flex items-center justify-center px-2 ml-3 text-xs font-medium text-gray-800 bg-gray-200 rounded-full">Free</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg sidebar-link group">
-                        <i class="fa-solid fa-microchip w-5 h-5"></i>
-                        <span class="flex-1 ml-3 whitespace-nowrap text-gray-400">Robotics Pro</span>
-                        <i class="fa-solid fa-lock text-amber-500 ml-2 text-xs"></i>
-                    </a>
-                </li>
-                <li>
-                      <a href="https://shardahub.com" class="flex items-center p-2 text-gray-900 rounded-lg sidebar-link group">
-                      <i class="fa-solid fa-cart-shopping w-5 h-5 text-gray-500"></i>
-                       <span class="flex-1 ml-3 whitespace-nowrap">Robotics Shop</span>
-                       </a>
-                </li>
-                <hr class="my-4 border-gray-200">
-                <!-- PREMIUM UPGRADE BUTTON -->
-                <li class="mt-10">
-                    <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
-                        <h4 class="text-sm font-bold text-blue-900 mb-1">Upgrade to GOLD</h4>
-                        <p class="text-xs text-blue-700 mb-3">Unlock Premium AI & SaaS features.</p>
-                        <button onclick="window.location.href=''" class="w-full bg-amber-500 text-white text-xs py-2 rounded font-bold hover:bg-amber-600">UPGRADE NOW</button>
+            <!-- Main Content -->
+            <div class="col py-3 main-content">
+                <!-- Hero Section -->
+                <div class="container-fluid hero-section text-center py-5 mb-5 rounded-3">
+                    <h1 class="display-3 fw-bold mb-3 hero-title">Welcome to <span
+                            class="text-gradient">ShardaHub</span></h1>
+                    <p class="lead mb-4 text-muted">The ultimate ecosystem for Shop, Gaming, AI, SaaS, and Robotics.</p>
+                    <a href="#explore" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold glow-effect">Explore
+                        Ecosystem</a>
+                </div>
+                <!-- Features Grid -->
+                <div class="container" id="explore">
+                    <div class="row g-4">
+                        <!-- Shop Card -->
+                        <div class="col-md-6 col-lg-4" id="shop">
+                            <div class="card h-100 glass-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-wrapper mb-3 text-primary">
+                                        <i class="bi bi-bag-check-fill display-4"></i>
+                                    </div>
+                                    <h3 class="card-title fw-bold">Sharda Shop</h3>
+                                    <p class="card-text text-secondary">Discover premium products. Go to the main shop
+                                        store.</p>
+                                    <a href="https://shop.shardahub.com"
+                                        class="btn btn-outline-primary w-100 mt-3 stretched-link">Shop New</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Games Card -->
+                        <div class="col-md-6 col-lg-4" id="games">
+                            <div class="card h-100 glass-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-wrapper mb-3 text-success">
+                                        <i class="bi bi-controller display-4"></i>
+                                    </div>
+                                    <h3 class="card-title fw-bold">Sharda Games</h3>
+                                    <p class="card-text text-secondary">Play immersive games. Enter the gaming arena.
+                                    </p>
+                                    <a href="https://games.shardahub.com"
+                                        class="btn btn-outline-success w-100 mt-3 stretched-link">Play Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- AI Tools Card -->
+                        <div class="col-md-6 col-lg-4" id="ai-tools">
+                            <div class="card h-100 glass-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-wrapper mb-3 text-info">
+                                        <i class="bi bi-cpu-fill display-4"></i>
+                                    </div>
+                                    <h3 class="card-title fw-bold">AI Tools</h3>
+                                    <p class="card-text text-secondary">Access next-gen AI tools for productivity.</p>
+                                    <a href="https://ai.shardahub.com"
+                                        class="btn btn-outline-info w-100 mt-3 stretched-link">Launch AI</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- SaaS Card -->
+                        <div class="col-md-6 col-lg-4" id="saas">
+                            <div class="card h-100 glass-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-wrapper mb-3 text-warning">
+                                        <i class="bi bi-cloud-check-fill display-4"></i>
+                                    </div>
+                                    <h3 class="card-title fw-bold">SaaS Solutions</h3>
+                                    <p class="card-text text-secondary">Enterprise-grade software as a service.</p>
+                                    <a href="https://saas.shardahub.com"
+                                        class="btn btn-outline-warning w-100 mt-3 stretched-link">Explore SaaS</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Templates Card -->
+                        <div class="col-md-6 col-lg-4" id="templates">
+                            <div class="card h-100 glass-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-wrapper mb-3 text-danger">
+                                        <i class="bi bi-columns-gap display-4"></i>
+                                    </div>
+                                    <h3 class="card-title fw-bold">Templates</h3>
+                                    <p class="card-text text-secondary">Premium templates for web and mobile apps.</p>
+                                    <a href="https://templates.shardahub.com"
+                                        class="btn btn-outline-danger w-100 mt-3 stretched-link">Browse Templates</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Robotics Card -->
+                        <div class="col-md-6 col-lg-4" id="robotics">
+                            <div class="card h-100 glass-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-wrapper mb-3 text-light">
+                                        <i class="bi bi-robot display-4"></i>
+                                    </div>
+                                    <h3 class="card-title fw-bold">Robotics</h3>
+                                    <p class="card-text text-secondary">Innovation in robotics and hardware.</p>
+                                    <a href="https://robotics.shardahub.com"
+                                        class="btn btn-outline-light w-100 mt-3 stretched-link">Discover Tech</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </li>
-            </ul>
+                </div>
+                <!-- About Section -->
+                <div class="container my-5 py-5" id="about">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 mb-4 mb-lg-0">
+                            <h2 class="display-5 fw-bold mb-4">The ShardaHub <span
+                                    class="text-gradient">Ecosystem</span></h2>
+                            <p class="lead text-secondary mb-4">ShardaHub is not just a website; it's a sprawling
+                                digital metropolis. We integrate commerce, entertainment, artificial intelligence, and
+                                cutting-edge technology into one seamless experience.</p>
+                            <p class="text-secondary">Born from a vision to centralize innovation, ShardaHub allows you
+                                to navigate effortlessly between our specialized branches. Whether you're here to shop
+                                premium goods, game with friends, or leverage AI for your business, you're always within
+                                the trusted ShardaHub network.</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="p-5 rounded-4 glass-card text-center">
+                                <i class="bi bi-layers-half display-1 text-gradient mb-3"></i>
+                                <h4 class="mt-3">One Identity. Infinite Possibilities.</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Contact Section -->
+                <div class="container my-5 py-5" id="contact">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card glass-card p-4 p-md-5">
+                                <div class="text-center mb-5">
+                                    <h2 class="fw-bold">Get in <span class="text-gradient">Touch</span></h2>
+                                    <p class="text-secondary">Have questions about our ecosystem? Interested in
+                                        partnerships?</p>
+                                </div>
+                                <form id="contactForm">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="text"
+                                                    class="form-control bg-transparent text-white border-secondary"
+                                                    id="name" placeholder="Name" required>
+                                                <label for="name" class="text-secondary">Your Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="email"
+                                                    class="form-control bg-transparent text-white border-secondary"
+                                                    id="email" placeholder="Email" required>
+                                                <label for="email" class="text-secondary">Your Email</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-floating">
+                                                <select class="form-select bg-transparent text-white border-secondary"
+                                                    id="subject" style="background-image: none;">
+                                                    <option class="text-dark" value="general">General Inquiry</option>
+                                                    <option class="text-dark" value="partnership">Partnership</option>
+                                                    <option class="text-dark" value="support">Support</option>
+                                                </select>
+                                                <label for="subject" class="text-secondary">Subject</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-floating">
+                                                <textarea
+                                                    class="form-control bg-transparent text-white border-secondary"
+                                                    placeholder="Message" id="message" style="height: 150px"
+                                                    required></textarea>
+                                                <label for="message" class="text-secondary">Message</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 text-center mt-4">
+                                            <button type="submit"
+                                                class="btn btn-primary btn-lg px-5 rounded-pill glow-effect">Send
+                                                Message</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="mt-5 py-4 text-center text-muted border-top border-secondary">
+                    <div class="mb-3">
+                        <a href="policy.html" class="text-secondary text-decoration-none me-3 hover-link">Privacy
+                            Policy</a>
+                        <a href="policy.html" class="text-secondary text-decoration-none hover-link">Terms of
+                            Service</a>
+                    </div>
+                    <p>&copy; <span id="year"></span> ShardaHub. All rights reserved.</p>
+                </footer>
+            </div>
         </div>
-    </aside>
-
-    <!-- MAIN CONTENT AREA -->
-    <main class="p-4 sm:ml-64 pt-24">
-        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg">
-           <h1 class="text-2xl font-bold">Welcome to ShardHub Main</h1>
-           <p class="text-gray-500 mt-2">Your unified brand for SaaS, AI, and Robotics.</p>
-        </div>
-    </main>
-
+    </div>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
