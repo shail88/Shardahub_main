@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Hub — ShardaHub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --ai-accent: #0ea5e9;
+            --success: #10b981;
+            --warn: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060b14;
+            color: #e2e8f0;
+            min-height: 100vh
+        }
+
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: rgba(255, 255, 255, .03);
+            border-right: 1px solid rgba(255, 255, 255, .08);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 200;
+            padding: 24px 16px;
+            transition: transform .3s
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 28px;
+            min-height: 100vh
+        }
+
+        .nav-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: .88rem;
+            border: none;
+            background: none;
+            color: #94a3b8;
+            width: 100%;
+            text-align: left
+        }
+
+        .nav-item-btn:hover {
+            background: rgba(255, 255, 255, .06);
+            color: #fff
+        }
+
+        .nav-item-btn.active {
+            background: rgba(14, 165, 233, .15);
+            color: #0ea5e9
+        }
+
+        .stat-card {
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04)
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1
+        }
+
+        .glass-table {
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: 16px;
+            overflow: hidden
+        }
+
+        .glass-table th {
+            background: rgba(255, 255, 255, .04);
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #64748b;
+            border: none;
+            padding: 14px 16px
+        }
+
+        .glass-table td {
+            border-color: rgba(255, 255, 255, .06);
+            padding: 12px 16px;
+            font-size: .88rem
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            color: #fff
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff
+        }
+
+        .tab-section {
+            display: none
+        }
+
+        .tab-section.active {
+            display: block
+        }
+
+        .badge-section {
+            font-size: .72rem;
+            padding: 3px 8px;
+            border-radius: 6px
+        }
+
+        .section-course {
+            background: rgba(14, 165, 233, .2);
+            color: #0ea5e9
+        }
+
+        .section-ai {
+            background: rgba(139, 92, 246, .2);
+            color: #8b5cf6
+        }
+
+        .section-saas {
+            background: rgba(99, 102, 241, .2);
+            color: #6366f1
+        }
+
+        .section-game {
+            background: rgba(16, 185, 129, .2);
+            color: #10b981
+        }
+
+        .section-template {
+            background: rgba(245, 158, 11, .2);
+            color: #f59e0b
+        }
+
+        .section-robotic {
+            background: rgba(239, 68, 68, .2);
+            color: #ef4444
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px
+        }
+
+        .form-control-dark {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 9px 14px
+        }
+
+        .form-control-dark:focus {
+            background: rgba(255, 255, 255, .08);
+            border-color: #0ea5e9;
+            color: #e2e8f0;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, .12);
+            outline: none
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="d-flex align-items-center gap-2 mb-4 ps-2">
+            <i class="bi bi-hexagon-fill text-info fs-4"></i>
+            <span class="fw-bold fs-5">Admin Hub</span>
+        </div>
+        ${[
+        {id:'dashboard',icon:'bi-speedometer2',label:'Dashboard'},
+        {id:'analytics',icon:'bi-bar-chart-line',label:'Analytics'},
+        {id:'orders',icon:'bi-bag',label:'Orders'},
+        {id:'users',icon:'bi-people',label:'Users'},
+        {id:'products',icon:'bi-grid',label:'Products'},
+        {id:'coupons',icon:'bi-ticket-perforated',label:'Coupons'},
+        {id:'razorpay',icon:'bi-credit-card',label:'Razorpay Keys'},
+        {id:'inventory',icon:'bi-boxes',label:'Inventory'},
+        {id:'subscriptions',icon:'bi-arrow-repeat',label:'Subscriptions'},
+        ].map(n=>`
+        <button class="nav-item-btn ${n.id==='dashboard'?'active':''}" onclick="showTab('${n.id}',this)">
+            <i class="bi ${n.icon}"></i>${n.label}
+        </button>`).join('')}
+        <hr class="border-secondary">
+        <a href="../index.html" class="nav-item-btn text-secondary text-decoration-none">
+            <i class="bi bi-arrow-left"></i>Back to Site
+        </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header Bar -->
+        <div class="d-flex align-items-center justify-content-between mb-5">
+            <div>
+                <h4 class="fw-bold mb-0" id="pageHeading">Dashboard</h4>
+                <div class="small text-secondary" id="pageDate"></div>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <span
+                    class="badge bg-danger bg-opacity-15 text-danger border border-danger border-opacity-25 px-3 py-2">
+                    <i class="bi bi-shield-lock me-1"></i>Admin Only
+                </span>
+            </div>
+        </div>
+
+        <!-- ── DASHBOARD TAB ── -->
+        <div id="tab-dashboard" class="tab-section active">
+            <!-- KPI Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Total Revenue</span>
+                            <i class="bi bi-currency-rupee text-success fs-4"></i>
+                        </div>
+                        <div class="stat-value text-success mb-1" id="adminRevenue">—</div>
+                        <div class="small text-secondary">Lifetime earnings</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Total Users</span>
+                            <i class="bi bi-people text-info fs-4"></i>
+                        </div>
+                        <div class="stat-value text-info mb-1" id="adminUsers">—</div>
+                        <div class="small text-secondary">Registered accounts</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Active Products</span>
+                            <i class="bi bi-grid text-warning fs-4"></i>
+                        </div>
+                        <div class="stat-value text-warning mb-1" id="adminProducts">—</div>
+                        <div class="small text-secondary">Listed on platform</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Enrollments</span>
+                            <i class="bi bi-mortarboard text-purple fs-4" style="color:var(--purple)"></i>
+                        </div>
+                        <div class="stat-value mb-1" style="color:var(--purple)" id="adminEnrollments">—</div>
+                        <div class="small text-secondary">Total course enrollments</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-4">Revenue by Section</h6>
+                        <div class="chart-container"><canvas id="revenueChart"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-4">Product Mix</h6>
+                        <div class="chart-container"><canvas id="sectionPieChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Mini -->
+            <div class="stat-card">
+                <div class="d-flex justify-content-between mb-3">
+                    <h6 class="fw-bold mb-0">Recent Orders</h6>
+                    <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="showTab('orders',null)">View
+                        All</button>
+                </div>
+                <div id="recentOrdersMini"></div>
+            </div>
+        </div>
+
+        <!-- ── ANALYTICS TAB ── -->
+        <div id="tab-analytics" class="tab-section">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-4">Revenue by Section (Bar)</h6>
+                        <div class="chart-container"><canvas id="sectionBarChart"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-4">New Users (Last 7 Days)</h6>
+                        <div class="chart-container"><canvas id="usersChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── ORDERS TAB ── -->
+        <div id="tab-orders" class="tab-section">
+            <div class="d-flex gap-2 mb-3 flex-wrap">
+                <input type="text" id="orderSearch" class="form-control-dark"
+                    placeholder="Search by user email or ID..." style="max-width:280px">
+                <select id="orderSectionFilter" class="form-control-dark" style="width:auto">
+                    <option value="">All Sections</option>
+                    <option value="course">Course</option>
+                    <option value="ai">AI</option>
+                    <option value="saas">SaaS</option>
+                    <option value="game">Games</option>
+                    <option value="template">Templates</option>
+                    <option value="robotic">Robotics</option>
+                </select>
+            </div>
+            <div class="glass-table">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User</th>
+                            <th>Section</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-secondary py-4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── USERS TAB ── -->
+        <div id="tab-users" class="tab-section">
+            <div class="glass-table">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="5" class="text-center text-secondary py-4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── COUPONS TAB ── -->
+        <div id="tab-coupons" class="tab-section">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-3">Create Coupon</h6>
+                        <div class="d-flex flex-column gap-3">
+                            <input type="text" id="couponCode" class="form-control-dark"
+                                placeholder="Coupon Code (e.g. SAVE20)">
+                            <select id="couponType" class="form-control-dark">
+                                <option value="percent">Percentage Discount</option>
+                                <option value="flat">Flat Discount (₹)</option>
+                            </select>
+                            <input type="number" id="couponValue" class="form-control-dark"
+                                placeholder="Value (e.g. 20 for 20%)">
+                            <input type="date" id="couponExpiry" class="form-control-dark" placeholder="Expiry Date">
+                            <input type="number" id="couponLimit" class="form-control-dark"
+                                placeholder="Max uses (leave blank = unlimited)">
+                            <button class="btn btn-gradient rounded-pill fw-semibold" onclick="createCoupon()">
+                                <i class="bi bi-plus-circle me-1"></i>Create Coupon
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="glass-table">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Type</th>
+                                    <th>Value</th>
+                                    <th>Used</th>
+                                    <th>Expiry</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="couponsTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center text-secondary py-4">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── RAZORPAY KEYS TAB ── -->
+        <div id="tab-razorpay" class="tab-section">
+            <div class="alert alert-warning border border-warning border-opacity-25 rounded-3 mb-4">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong>Security Note:</strong> These keys are stored in your Supabase database. Ensure RLS is enabled
+                on <code>razorpay_accounts</code> and only admins can read <code>key_secret</code>.
+            </div>
+            <div class="row g-3" id="rzpKeysGrid">
+                ${['course','ai','saas','game','template','robotic'].map(s=>`
+                <div class="col-md-6">
+                    <div class="stat-card">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="badge-section section-${s} px-2 py-1 rounded">${s.toUpperCase()}</span>
+                            <span class="fw-semibold text-capitalize">ShardaHub ${s}</span>
+                        </div>
+                        <input type="text" class="form-control-dark w-100 mb-2" id="rzp_${s}_key"
+                            placeholder="Key ID (rzp_live_XXXX)">
+                        <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="saveRzpKey('${s}')">
+                            <i class="bi bi-save me-1"></i>Save Key
+                        </button>
+                        <div id="rzp_${s}_status" class="small mt-2 text-secondary"></div>
+                    </div>
+                </div>`).join('')}
+            </div>
+        </div>
+
+        <!-- ── INVENTORY TAB ── -->
+        <div id="tab-inventory" class="tab-section">
+            <div class="glass-table">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>SKU</th>
+                            <th>Stock</th>
+                            <th>Reserved</th>
+                            <th>Reorder Level</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-secondary py-4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── SUBSCRIPTIONS TAB ── -->
+        <div id="tab-subscriptions" class="tab-section">
+            <div class="glass-table">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Product</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Expires</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subscriptionsTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-secondary py-4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── PRODUCTS TAB ── -->
+        <div id="tab-products" class="tab-section">
+            <div class="d-flex justify-content-between mb-3">
+                <h6 class="fw-bold">All Products</h6>
+                <a href="../course/" class="btn btn-gradient btn-sm rounded-pill px-3"><i
+                        class="bi bi-plus me-1"></i>Add New</a>
+            </div>
+            <div class="glass-table">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <tr>
+                            <td colspan="5" class="text-center text-secondary py-4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/sharda-db.js"></script>
+    <script src="../assets/js/payments.js"></script>
+    <script>
+        window.ShardaBaseUrl = '../';
+        document.getElementById('pageDate').textContent = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        let revenueChartInst, pieChartInst, barChartInst, usersChartInst;
+        const SECTION_COLORS = { course: '#0ea5e9', ai: '#8b5cf6', saas: '#6366f1', game: '#10b981', template: '#f59e0b', robotic: '#ef4444' };
+
+        async function init() {
+            await new Promise(r => { if (window.SubpassAuth?.ready) window.SubpassAuth.ready.then(r); else setTimeout(r, 800); });
+            const user = window.SubpassAuth?.user;
+            if (!user || user.role !== 'admin') {
+                alert('Admin access required.'); window.location.href = '../index.html'; return;
+            }
+            loadDashboard();
+        }
+
+        async function loadDashboard() {
+            const stats = await ShardaDB.getAdminStats();
+            document.getElementById('adminRevenue').textContent = '₹' + stats.totalRevenue.toLocaleString();
+            document.getElementById('adminUsers').textContent = stats.totalUsers.toLocaleString();
+            document.getElementById('adminProducts').textContent = stats.activeProducts.toLocaleString();
+            document.getElementById('adminEnrollments').textContent = stats.totalEnrollments.toLocaleString();
+
+            const revenueBySection = await ShardaDB.getRevenueBySection();
+            renderRevenueCharts(revenueBySection);
+
+            const orders = await ShardaDB.getRecentOrders(6);
+            renderMiniOrders(orders);
+        }
+
+        function renderRevenueCharts(data) {
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            const colors = labels.map(l => SECTION_COLORS[l] || '#64748b');
+
+            // Bar chart
+            const ctx1 = document.getElementById('revenueChart').getContext('2d');
+            if (revenueChartInst) revenueChartInst.destroy();
+            revenueChartInst = new Chart(ctx1, { type: 'bar', data: { labels, datasets: [{ data: values, backgroundColor: colors.map(c => c + '66'), borderColor: colors, borderWidth: 2, borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#94a3b8' } }, y: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#94a3b8', callback: v => '₹' + v.toLocaleString() } } } } });
+
+            // Pie chart
+            const ctx2 = document.getElementById('sectionPieChart').getContext('2d');
+            if (pieChartInst) pieChartInst.destroy();
+            pieChartInst = new Chart(ctx2, { type: 'doughnut', data: { labels, datasets: [{ data: values, backgroundColor: colors.map(c => c + 'aa'), borderColor: colors, borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', padding: 12, font: { size: 11 } } } } } });
+        }
+
+        function renderMiniOrders(orders) {
+            const tbody = document.getElementById('recentOrdersMini');
+            tbody.innerHTML = `<table class="table table-dark table-hover mb-0"><thead><tr>
+    <th class="small text-secondary">ID</th><th class="small text-secondary">User</th>
+    <th class="small text-secondary">Section</th><th class="small text-secondary">Amount</th>
+    <th class="small text-secondary">Status</th></tr></thead><tbody>`+
+                orders.map(o => `<tr>
+    <td class="small text-secondary">${o.id?.substring(0, 8)}...</td>
+    <td class="small">${o.users?.email || '—'}</td>
+    <td><span class="badge-section section-${o.razorpay_section || 'course'} px-2 py-1 rounded">${o.razorpay_section || '—'}</span></td>
+    <td class="small fw-semibold">₹${(o.total_amount || 0).toLocaleString()}</td>
+    <td><span class="badge ${o.status === 'paid' ? 'bg-success' : o.status === 'pending' ? 'bg-warning text-dark' : 'bg-secondary'} bg-opacity-20 text-${o.status === 'paid' ? 'success' : o.status === 'pending' ? 'warning' : 'secondary'}">${o.status}</span></td>
+  </tr>`).join('') + '</tbody></table>';
+        }
+
+        async function loadOrders() {
+            const orders = await ShardaDB.getRecentOrders(50);
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = orders.map(o => `<tr>
+    <td class="small text-secondary">${o.id?.substring(0, 12)}...</td>
+    <td class="small">${o.users?.email || '—'}</td>
+    <td><span class="badge-section section-${o.razorpay_section || 'course'} px-2 py-1 rounded small">${o.razorpay_section || '—'}</span></td>
+    <td class="small fw-semibold text-white">₹${(o.total_amount || 0).toLocaleString()}</td>
+    <td><span class="badge ${o.status === 'paid' ? 'bg-success' : o.status === 'pending' ? 'bg-warning text-dark' : 'bg-secondary'} bg-opacity-20 text-capitalize">${o.status}</span></td>
+    <td class="small text-secondary">${new Date(o.created_at).toLocaleString()}</td>
+  </tr>`).join('');
+        }
+
+        async function loadUsers() {
+            const users = await ShardaDB.getRecentUsers(50);
+            document.getElementById('usersTableBody').innerHTML = users.map(u => `<tr>
+    <td class="small fw-medium">${u.full_name || '—'}</td>
+    <td class="small text-secondary">${u.email}</td>
+    <td><span class="badge ${u.role === 'admin' ? 'bg-danger' : 'bg-info'} bg-opacity-15 text-${u.role === 'admin' ? 'danger' : 'info'}">${u.role || 'user'}</span></td>
+    <td class="small text-secondary">${new Date(u.created_at).toLocaleDateString()}</td>
+    <td>
+      <button class="btn btn-sm btn-outline-warning rounded-pill px-2 py-0" onclick="toggleAdmin('${u.id}','${u.role}')">
+        ${u.role === 'admin' ? 'Demote' : 'Make Admin'}
+      </button>
+    </td>
+  </tr>`).join('');
+        }
+
+        async function loadCoupons() {
+            const coupons = await ShardaDB.getCoupons();
+            document.getElementById('couponsTableBody').innerHTML = coupons.length
+                ? coupons.map(c => `<tr>
+      <td class="fw-bold text-info small">${c.code}</td>
+      <td class="small text-secondary">${c.discount_type}</td>
+      <td class="small">${c.discount_type === 'percent' ? c.discount_value + '%' : '₹' + c.discount_value}</td>
+      <td class="small">${c.used_count || 0}/${c.max_uses || '∞'}</td>
+      <td class="small text-secondary">${c.expiry_date ? new Date(c.expiry_date).toLocaleDateString() : 'Never'}</td>
+      <td><span class="badge ${c.is_active ? 'bg-success' : 'bg-secondary'} bg-opacity-15 text-${c.is_active ? 'success' : 'secondary'}">${c.is_active ? 'Active' : 'Inactive'}</span></td>
+      <td>
+        <button class="btn btn-sm btn-outline-${c.is_active ? 'danger' : 'success'} rounded-pill py-0 px-2"
+                onclick="ShardaDB.toggleCoupon('${c.id}',${!c.is_active}).then(loadCoupons)">
+          ${c.is_active ? 'Disable' : 'Enable'}
+        </button>
+      </td>
+    </tr>`).join('')
+                : '<tr><td colspan="7" class="text-center text-secondary py-4">No coupons yet</td></tr>';
+        }
+
+        async function createCoupon() {
+            const code = document.getElementById('couponCode').value.trim().toUpperCase();
+            const type = document.getElementById('couponType').value;
+            const value = parseFloat(document.getElementById('couponValue').value);
+            if (!code || !value) { ShardaPayments.showToast('Fill code and value', 'warning'); return; }
+            const { error } = await ShardaDB.createCoupon({
+                code, discount_type: type, discount_value: value,
+                expiry_date: document.getElementById('couponExpiry').value || null,
+                max_uses: parseInt(document.getElementById('couponLimit').value) || null,
+                is_active: true, used_count: 0
+            });
+            if (!error) { ShardaPayments.showToast('Coupon created!', 'success'); loadCoupons(); }
+            else ShardaPayments.showToast('Error: ' + error.message, 'danger');
+        }
+
+        async function loadRazorpayKeys() {
+            const accounts = await ShardaDB.getRazorpayAccounts();
+            accounts.forEach(a => {
+                const el = document.getElementById('rzp_' + a.section_key + '_key');
+                if (el) el.value = a.key_id;
+            });
+        }
+
+        async function saveRzpKey(section) {
+            const keyId = document.getElementById('rzp_' + section + '_key').value.trim();
+            const label = { 'course': 'ShardaHub Courses', 'ai': 'ShardaHub AI Lab', 'saas': 'ShardaHub SaaS', 'game': 'ShardaHub Games', 'template': 'ShardaHub Templates', 'robotic': 'ShardaHub Robotics' }[section];
+            const { error } = await ShardaDB.upsertRazorpayAccount(section, keyId, label);
+            const statusEl = document.getElementById('rzp_' + section + '_status');
+            if (!error) { statusEl.textContent = '✓ Saved successfully'; statusEl.className = 'small mt-2 text-success'; }
+            else { statusEl.textContent = '✗ Error: ' + error.message; statusEl.className = 'small mt-2 text-danger'; }
+        }
+
+        async function loadInventory() {
+            const inv = await ShardaDB.getAllInventory();
+            document.getElementById('inventoryTableBody').innerHTML = inv.length
+                ? inv.map(i => {
+                    const isLow = i.stock_qty <= i.reorder_level;
+                    return `<tr>
+        <td class="small fw-medium">${i.products?.title || i.product_id}</td>
+        <td class="small text-secondary">${i.sku || '—'}</td>
+        <td class="fw-bold ${i.stock_qty === 0 ? 'text-danger' : isLow ? 'text-warning' : 'text-success'}">${i.stock_qty}</td>
+        <td class="small text-secondary">${i.reserved_qty || 0}</td>
+        <td class="small text-secondary">${i.reorder_level}</td>
+        <td><span class="badge ${i.stock_qty === 0 ? 'bg-danger' : isLow ? 'bg-warning text-dark' : 'bg-success'} bg-opacity-15">${i.stock_qty === 0 ? 'Out of Stock' : isLow ? 'Low Stock' : 'In Stock'}</span></td>
+      </tr>`;
+                }).join('')
+                : '<tr><td colspan="6" class="text-center text-secondary py-4">No inventory data</td></tr>';
+        }
+
+        async function loadSubscriptions() {
+            const { data } = await supabase.from('user_subscriptions').select('*,users(email),products(title,product_type),product_tiers(name)').order('created_at', { ascending: false }).limit(50);
+            const tbody = document.getElementById('subscriptionsTableBody');
+            tbody.innerHTML = (data || []).map(s => `<tr>
+    <td class="small">${s.users?.email || '—'}</td>
+    <td class="small">${s.products?.title || '—'}</td>
+    <td class="small text-info">${s.product_tiers?.name || '—'}</td>
+    <td><span class="badge ${s.status === 'active' ? 'bg-success' : 'bg-secondary'} bg-opacity-15 text-capitalize">${s.status}</span></td>
+    <td class="small text-secondary">${s.expires_at ? new Date(s.expires_at).toLocaleDateString() : 'Lifetime'}</td>
+    <td>
+      ${s.status === 'active' ? `<button class="btn btn-sm btn-outline-danger rounded-pill py-0 px-2"
+        onclick="supabase.from('user_subscriptions').update({status:'cancelled'}).eq('id','${s.id}').then(loadSubscriptions)">Cancel</button>` : '—'}
+    </td>
+  </tr>`).join('');
+        }
+
+        async function loadProducts() {
+            const products = await ShardaDB.getProducts(null, 100);
+            document.getElementById('productsTableBody').innerHTML = products.map(p => `<tr>
+    <td class="small fw-medium">${p.title}</td>
+    <td><span class="badge-section section-${p.product_type || 'course'} px-2 py-1 rounded small">${p.product_type || '—'}</span></td>
+    <td class="small">${p.price_inr === 0 ? 'Free' : '₹' + (p.price_inr || 0).toLocaleString()}</td>
+    <td><span class="badge ${p.is_active ? 'bg-success' : 'bg-secondary'} bg-opacity-15">${p.is_active ? 'Active' : 'Inactive'}</span></td>
+    <td class="small text-secondary">${new Date(p.created_at).toLocaleDateString()}</td>
+  </tr>`).join('');
+        }
+
+        async function toggleAdmin(userId, currentRole) {
+            const newRole = currentRole === 'admin' ? 'user' : 'admin';
+            await supabase.from('users').update({ role: newRole }).eq('id', userId);
+            ShardaPayments.showToast('Role updated to ' + newRole, 'success');
+            loadUsers();
+        }
+
+        // Load analytics charts
+        function loadAnalytics() {
+            // Placeholder data for user growth
+            const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const userData = [12, 19, 8, 15, 22, 30, 18];
+            const ctx3 = document.getElementById('sectionBarChart').getContext('2d');
+            if (barChartInst) barChartInst.destroy();
+            // reuse revenue data
+            ShardaDB.getRevenueBySection().then(data => {
+                barChartInst = new Chart(ctx3, {
+                    type: 'bar', data: {
+                        labels: Object.keys(data),
+                        datasets: [{ label: 'Revenue', data: Object.values(data), backgroundColor: Object.keys(data).map(k => SECTION_COLORS[k] + '88'), borderColor: Object.keys(data).map(k => SECTION_COLORS[k]), borderWidth: 2, borderRadius: 10 }]
+                    }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,.05)' } }, y: { ticks: { color: '#94a3b8', callback: v => '₹' + v.toLocaleString() }, grid: { color: 'rgba(255,255,255,.05)' } } } }
+                });
+            });
+            const ctx4 = document.getElementById('usersChart').getContext('2d');
+            if (usersChartInst) usersChartInst.destroy();
+            usersChartInst = new Chart(ctx4, { type: 'line', data: { labels, datasets: [{ label: 'New Users', data: userData, fill: true, backgroundColor: 'rgba(14,165,233,.1)', borderColor: '#0ea5e9', tension: .4, pointBackgroundColor: '#0ea5e9' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,.05)' } }, y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,.05)' } } } } });
+        }
+
+        const TAB_LOADERS = { orders: loadOrders, users: loadUsers, coupons: loadCoupons, razorpay: loadRazorpayKeys, inventory: loadInventory, subscriptions: loadSubscriptions, products: loadProducts, analytics: loadAnalytics };
+
+        function showTab(id, btn) {
+            document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            document.querySelectorAll('.nav-item-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            document.getElementById('pageHeading').textContent = { dashboard: 'Dashboard', analytics: 'Analytics', orders: 'Orders', users: 'Users', products: 'Products', coupons: 'Coupons', razorpay: 'Razorpay Keys', inventory: 'Inventory', subscriptions: 'Subscriptions' }[id] || id;
+            if (TAB_LOADERS[id]) TAB_LOADERS[id]();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

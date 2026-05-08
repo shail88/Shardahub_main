@@ -1,0 +1,16 @@
+/* Robotics Specific Styles */
+.robot-card {
+    transition: var(--transition-base);
+}
+
+.robot-card:hover {
+    border-color: var(--accent-gold) !important;
+}
+
+.robot-icon-bg {
+    height: 200px;
+    background: #2d3748;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Solutions — ShardaHub</title>
+    <meta name="description" content="Powerful SaaS tools with subscription plans. Starter to Enterprise.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060b14;
+            color: #e2e8f0
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            backdrop-filter: blur(12px)
+        }
+
+        .tier-card {
+            border: 2px solid rgba(255, 255, 255, .08);
+            border-radius: 20px;
+            transition: all .3s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .tier-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 60px rgba(14, 165, 233, .25)
+        }
+
+        .tier-card.popular {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 30px rgba(14, 165, 233, .2)
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: #fff;
+            font-size: .7rem;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 0 0 10px 10px
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            color: #fff
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff
+        }
+
+        .feature-check {
+            color: #10b981
+        }
+
+        .hero-bg {
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 102, 241, .12) 0%, transparent 70%)
+        }
+
+        .saas-card {
+            cursor: pointer;
+            transition: all .25s;
+            border-radius: 16px
+        }
+
+        .saas-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(99, 102, 241, .2)
+        }
+
+        .testimonial {
+            border-left: 3px solid #6366f1;
+            border-radius: 0 12px 12px 0
+        }
+    </style>
+</head>
+
+<body>
+    <div id="headerPlaceholder"></div>
+
+    <!-- Hero -->
+    <section class="hero-bg py-5">
+        <div class="container py-4 text-center">
+            <span class="badge bg-purple bg-opacity-15 border rounded-pill px-3 py-2 mb-3"
+                style="background:rgba(99,102,241,.15)!important;color:#8b5cf6;border-color:rgba(99,102,241,.3)!important">
+                <i class="bi bi-grid-3x3-gap me-1"></i>SaaS Hub
+            </span>
+            <h1 class="display-5 fw-bold mb-3">Enterprise <span style="color:#6366f1">SaaS Tools</span></h1>
+            <p class="text-secondary lead mb-4">Productivity, automation and analytics tools — all under one
+                subscription.</p>
+            <div id="currentPlanBanner" class="glass d-inline-block px-4 py-2 rounded-pill d-none">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                <span id="currentPlanText" class="fw-semibold"></span>
+                <a href="dashboard.html" class="btn btn-sm btn-outline-info rounded-pill ms-3 px-3">Dashboard</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SaaS Products -->
+    <section class="py-4">
+        <div class="container">
+            <h5 class="fw-bold mb-4">🛠 SaaS Products</h5>
+            <div class="row g-3" id="saasProducts">
+                <!-- Dynamically loaded -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Tiers -->
+    <section class="py-5" id="pricing">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-2">Subscription Plans</h2>
+                <p class="text-secondary">All tools included in every paid plan.</p>
+                <div class="d-flex align-items-center justify-content-center gap-3 mt-3">
+                    <span class="small text-secondary">Monthly</span>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="annualToggle"
+                            style="width:3rem;height:1.5rem">
+                    </div>
+                    <span class="small text-secondary">Annual <span class="badge bg-success">Save 25%</span></span>
+                </div>
+            </div>
+
+            <div class="row g-4 justify-content-center" id="saasTiers">
+                <!-- Dynamically loaded -->
+            </div>
+        </div>
+    </section>
+
+    <div id="footerPlaceholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/footer.js"></script>
+    <script src="../assets/js/sharda-access.js"></script>
+    <script src="../assets/js/payments.js"></script>
+    <script>
+        window.ShardaBaseUrl = '../';
+        let isAnnual = false;
+        let saasTiers = [];
+
+        async function init() {
+            await new Promise(r => { if (window.SubpassAuth?.ready) window.SubpassAuth.ready.then(r); else setTimeout(r, 800); });
+            const user = window.SubpassAuth?.user;
+
+            loadSaasProducts();
+            loadSaasTiers();
+
+            if (user) {
+                const access = await ShardaAccess.checkSaaS(user.id, 'saas-hub');
+                if (access.allowed) {
+                    document.getElementById('currentPlanBanner').classList.remove('d-none');
+                    document.getElementById('currentPlanText').textContent = 'Active: ' + access.plan + (access.daysLeft ? ' (' + access.daysLeft + ' days left)' : '');
+                }
+            }
+        }
+
+        async function loadSaasProducts() {
+            const { data: products } = await supabase.from('products').select('*').eq('product_type', 'saas').eq('is_active', true);
+            const grid = document.getElementById('saasProducts');
+
+            if (!products || products.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center text-secondary py-5">No SaaS products found. Add them in the Admin Panel!</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(p => `
+                <div class="col-sm-6 col-lg-3">
+                    <div class="glass saas-card p-4 h-100" onclick="window.location.href='../product.html?id=${p.id}'">
+                        <div class="rounded-3 p-3 mb-3 d-inline-flex" style="background:rgba(99,102,241,0.12)">
+                            <i class="bi ${p.icon || 'bi-grid-3x3-gap'} fs-3" style="color:#6366f1"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1">${p.title}</h6>
+                        <p class="text-secondary small mb-0">${p.tagline || p.description || ''}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadSaasTiers() {
+            const { data: products } = await supabase.from('products').select('*, product_tiers(*)').eq('product_type', 'saas').eq('is_active', true);
+
+            if (!products || products.length === 0) return;
+
+            const mainSaaS = products.find(p => p.product_tiers && p.product_tiers.length > 0) || products[0];
+            if (!mainSaaS || !mainSaaS.product_tiers) return;
+
+            saasTiers = mainSaaS.product_tiers;
+            renderTiers();
+        }
+
+        function renderTiers() {
+            const container = document.getElementById('saasTiers');
+            container.innerHTML = saasTiers.sort((a, b) => a.price_inr - b.price_inr).map(tier => {
+                const price = isAnnual ? Math.round(tier.price_inr * 0.75 * 12) : tier.price_inr;
+                const period = isAnnual ? '/yr' : '/mo';
+                const color = tier.price_inr === 0 ? '#10b981' : (tier.price_inr > 5000 ? '#f59e0b' : '#0ea5e9');
+
+                return `
+                    <div class="col-md-6 col-lg-3">
+                        <div class="tier-card p-4 h-100 d-flex flex-column" style="background:rgba(255,255,255,0.02)">
+                            <div class="rounded-3 d-inline-flex p-3 mb-3" style="background:${color}22;width:fit-content">
+                                <i class="bi ${tier.price_inr === 0 ? 'bi-person' : 'bi-rocket'} fs-2" style="color:${color}"></i>
+                            </div>
+                            <h5 class="fw-bold mb-1">${tier.name}</h5>
+                            <div class="mb-3">
+                                <span class="display-6 fw-bold" style="color:${color}">₹${price.toLocaleString()}</span>
+                                <span class="text-secondary small">${period}</span>
+                            </div>
+                            <ul class="list-unstyled flex-grow-1 mb-4 small">
+                                ${(tier.features || []).map(f => `
+                                    <li class="d-flex gap-2 mb-2">
+                                        <i class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0" style="color:#10b981"></i>
+                                        <span>${f}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                            <button class="btn btn-outline-info rounded-pill w-100 fw-semibold" 
+                                    onclick="handleSaaSPlan('${tier.name}', ${tier.price_inr}, 30, '${tier.id}')">
+                                ${tier.price_inr === 0 ? 'Get Started' : 'Subscribe Now'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('annualToggle').addEventListener('change', e => {
+            isAnnual = e.target.checked;
+            renderTiers();
+        });
+
+        async function handleSaaSPlan(name, price, durationDays, tierId) {
+            const user = window.SubpassAuth?.user;
+            if (!user) { window.location.href = '../login.html?redirect=' + encodeURIComponent(location.href); return; }
+
+            if (price === 0) {
+                await supabase.from('user_subscriptions').upsert([{
+                    user_id: user.id,
+                    product_id: 'saas-hub',
+                    tier_id: tierId,
+                    status: 'active'
+                }]);
+                ShardaPayments.showToast(name + ' plan activated!', 'success');
+                window.location.href = 'dashboard.html'; return;
+            }
+
+            const finalPrice = isAnnual ? Math.round(price * 0.75) : price;
+            const days = isAnnual ? 365 : durationDays;
+
+            await ShardaPayments.quickBuy({
+                id: 'saas-hub',
+                name: 'SaaS ' + name,
+                price: finalPrice,
+                icon: 'bi-grid-3x3-gap',
+                tierId: tierId,
+                durationDays: days,
+                section: 'saas'
+            }, 'saas');
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+
+</body>
+
+</html>

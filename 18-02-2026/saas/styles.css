@@ -1,0 +1,9 @@
+/* SaaS Specific Styles */
+.saas-feature-icon {
+    transition: var(--transition-base);
+}
+
+.glass:hover .saas-feature-icon {
+    transform: scale(1.1);
+    color: var(--accent-blue) !important;
+}

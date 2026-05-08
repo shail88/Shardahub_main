@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates Marketplace — ShardaHub</title>
+    <meta name="description" content="Download free and premium templates for websites, UI kits, docs and more.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060b14;
+            color: #e2e8f0
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            backdrop-filter: blur(12px)
+        }
+
+        .tpl-card {
+            transition: all .3s;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer
+        }
+
+        .tpl-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(245, 158, 11, .2)
+        }
+
+        .tpl-thumb {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #0f172a
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border: none;
+            color: #fff
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff
+        }
+
+        .badge-free {
+            background: rgba(16, 185, 129, .15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, .3)
+        }
+
+        .badge-premium {
+            background: rgba(245, 158, 11, .15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, .3)
+        }
+
+        .hero-bg {
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245, 158, 11, .1) 0%, transparent 70%)
+        }
+
+        .filter-pill {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 50px;
+            padding: 5px 14px;
+            cursor: pointer;
+            font-size: .82rem;
+            transition: all .2s
+        }
+
+        .filter-pill:hover,
+        .filter-pill.active {
+            background: rgba(245, 158, 11, .2);
+            border-color: #f59e0b;
+            color: #f59e0b
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .12);
+            color: #fff;
+            border-radius: 12px;
+            padding: 10px 20px
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, .15)
+        }
+
+        .dl-badge {
+            font-size: .7rem
+        }
+    </style>
+</head>
+
+<body>
+    <div id="headerPlaceholder"></div>
+
+    <section class="hero-bg py-5">
+        <div class="container py-3 text-center">
+            <span class="badge rounded-pill px-3 py-2 mb-3"
+                style="background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)">
+                <i class="bi bi-grid me-1"></i>Template Store
+            </span>
+            <h1 class="display-5 fw-bold mb-3">Ready-to-Use <span style="color:#f59e0b">Templates</span></h1>
+            <p class="text-secondary lead mb-4">Website, UI kits, doc templates & more. Free and premium.</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="position-relative">
+                        <i
+                            class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
+                        <input id="searchInput" type="text" class="search-input w-100 ps-5"
+                            placeholder="Search templates...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tags / Filters -->
+    <section class="py-3 border-bottom border-secondary border-opacity-25 sticky-top"
+        style="background:#060b14ee;backdrop-filter:blur(12px);z-index:100">
+        <div class="container">
+            <div class="d-flex gap-2 flex-wrap">
+                <span class="filter-pill active" data-cat="all">All</span>
+                <span class="filter-pill" data-cat="website">🌐 Website</span>
+                <span class="filter-pill" data-cat="ui-kit">🎨 UI Kit</span>
+                <span class="filter-pill" data-cat="dashboard">📊 Dashboard</span>
+                <span class="filter-pill" data-cat="landing">🚀 Landing Page</span>
+                <span class="filter-pill" data-cat="doc">📄 Documents</span>
+                <div class="ms-auto">
+                    <select id="sortFilter" class="search-input py-1 px-3 small" style="width:auto">
+                        <option value="newest">Newest</option>
+                        <option value="popular">Most Downloaded</option>
+                        <option value="free">Free First</option>
+                        <option value="paid">Paid First</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Grid -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4" id="templateGrid">
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-warning" role="status"></div>
+                </div>
+            </div>
+            <div id="noTemplates" class="text-center py-5 d-none">
+                <i class="bi bi-search display-1 text-secondary mb-3 d-block"></i>
+                <p class="text-secondary">No templates found</p>
+            </div>
+        </div>
+    </section>
+
+    <div id="footerPlaceholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/footer.js"></script>
+    <script src="../assets/js/sharda-access.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="../assets/js/payments.js"></script>
+    <script>
+        window.ShardaBaseUrl = '../';
+        let allTpl = [];
+        let purchased = [];
+        let activeCat = 'all';
+
+        const FALLBACK = [
+            { id: 'tpl-landing-01', title: 'SaaS Landing Pro', category: 'landing', price_inr: 0, og_price: 599, downloads: 1240, image_url: window.SHARDA_PLACEHOLDER, tags: ['Bootstrap', 'HTML', 'CSS'], license: 'personal' },
+            { id: 'tpl-dash-01', title: 'Admin Dashboard Kit', category: 'dashboard', price_inr: 999, og_price: 1999, downloads: 876, image_url: window.SHARDA_PLACEHOLDER, tags: ['HTML', 'JS', 'Chart.js'], license: 'commercial' },
+            { id: 'tpl-web-01', title: 'Agency Portfolio', category: 'website', price_inr: 499, og_price: 999, downloads: 543, image_url: window.SHARDA_PLACEHOLDER, tags: ['HTML', 'GSAP'], license: 'personal' },
+            { id: 'tpl-ui-01', title: 'Component Library v2', category: 'ui-kit', price_inr: 1499, og_price: 2499, downloads: 321, image_url: window.SHARDA_PLACEHOLDER, tags: ['Figma', 'Bootstrap'], license: 'extended' },
+            { id: 'tpl-doc-01', title: 'Business Proposal Pack', category: 'doc', price_inr: 0, og_price: 299, downloads: 2100, image_url: window.SHARDA_PLACEHOLDER, tags: ['DOCX', 'PDF'], license: 'personal' },
+            { id: 'tpl-landing-02', title: 'E-Commerce Store', category: 'landing', price_inr: 799, og_price: 1599, downloads: 657, image_url: window.SHARDA_PLACEHOLDER, tags: ['HTML', 'JS'], license: 'commercial' },
+        ];
+
+        async function init() {
+            const { data } = await supabase.from('products').select('*').eq('product_type', 'template').eq('is_active', true);
+            allTpl = data && data.length ? data : FALLBACK;
+
+            const user = window.SubpassAuth?.user;
+            if (user) {
+                const { data: dl } = await supabase.from('template_downloads').select('product_id').eq('user_id', user.id);
+                purchased = (dl || []).map(d => d.product_id);
+            }
+            render();
+        }
+
+        function render() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const sort = document.getElementById('sortFilter').value;
+            let filtered = allTpl.filter(t => {
+                const matchCat = activeCat === 'all' || t.category === activeCat;
+                const matchQ = !q || t.title.toLowerCase().includes(q);
+                return matchCat && matchQ;
+            });
+            if (sort === 'popular') filtered.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
+            if (sort === 'free') filtered.sort((a, b) => (a.price_inr || 0) - (b.price_inr || 0));
+            if (sort === 'paid') filtered.sort((a, b) => (b.price_inr || 0) - (a.price_inr || 0));
+
+            const grid = document.getElementById('templateGrid');
+            document.getElementById('noTemplates').classList.toggle('d-none', filtered.length > 0);
+            if (!filtered.length) { grid.innerHTML = ''; return; }
+
+            grid.innerHTML = filtered.map(t => {
+                const isFree = !t.price_inr || t.price_inr === 0;
+                const owned = purchased.includes(t.id);
+                // Ensure tags is handled safely
+                const tags = Array.isArray(t.tags) ? t.tags : (typeof t.tags === 'string' ? t.tags.split(',') : []);
+
+                return `
+    <div class="col-sm-6 col-lg-4">
+      <div class="glass tpl-card h-100 d-flex flex-column">
+        <div class="position-relative overflow-hidden" onclick="window.location.href='../product.html?id=${t.id}'">
+          <img src="${sanitizeImg(t.image_url)}"
+               class="tpl-thumb" alt="${t.title}" onerror="this.onerror=null; this.src=window.SHARDA_PLACEHOLDER;">
+          <div class="position-absolute top-0 start-0 p-2">
+            <span class="badge ${isFree ? 'badge-free' : 'badge-premium'}">${isFree ? '🆓 Free' : '💎 Premium'}</span>
+          </div>
+          ${owned ? '<div class="position-absolute top-0 end-0 p-2"><span class="badge bg-success bg-opacity-75"><i class="bi bi-check-circle me-1"></i>Owned</span></div>' : ''}
+        </div>
+        <div class="p-4 flex-grow-1 d-flex flex-column">
+          <h6 class="fw-bold mb-1" onclick="window.location.href='../product.html?id=${t.id}'">${t.title}</h6>
+          <div class="d-flex gap-2 flex-wrap mb-3">
+            ${tags.map(tag => `<span class="badge bg-secondary bg-opacity-25 text-secondary" style="font-size:.7rem">${tag}</span>`).join('')}
+          </div>
+          <div class="mt-auto d-flex align-items-center justify-content-between">
+            <div>
+              ${isFree
+                        ? '<span class="text-success fw-bold">Free</span>'
+                        : `<span class="fw-bold text-white">₹${(t.price_inr || 0).toLocaleString()}</span>
+                  ${t.og_price ? `<span class="text-secondary text-decoration-line-through small ms-2">₹${t.og_price}</span>` : ''}`}
+              <div class="small text-secondary mt-1">
+                <i class="bi bi-download me-1"></i>${(t.downloads || 0).toLocaleString()} downloads
+              </div>
+            </div>
+            <button class="btn btn-sm ${owned ? 'btn-success' : 'btn-gradient'} rounded-pill px-3 fw-semibold"
+                    onclick="handleTemplate('${t.id}','${t.title}',${t.price_inr || 0},'${t.download_url || ''}')">
+                ${owned ? '<i class="bi bi-download me-1"></i>' : (isFree ? 'Get Free' : 'Buy')}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+            }).join('');
+        }
+
+        async function handleTemplate(id, title, price, dlUrl) {
+            const user = window.SubpassAuth?.user;
+            if (!user) { window.location.href = '../login.html'; return; }
+
+            const access = await ShardaAccess.checkTemplate(user.id, id);
+
+            if (access.allowed) {
+                if (dlUrl) {
+                    // Increment download count
+                    await supabase.rpc('increment_template_downloads', { p_user_id: user.id, p_product_id: id });
+                    window.open(dlUrl, '_blank');
+                } else {
+                    ShardaPayments.showToast('File URL not configured yet. Contact support.', 'info');
+                }
+                return;
+            }
+
+            if (access.reason === 'purchase_required') {
+                await ShardaPayments.quickBuy({ id, name: title, price, icon: 'bi-grid', maxDownloads: 5 }, 'template');
+                purchased.push(id);
+                render();
+            } else {
+                ShardaAccess.showUpgradePrompt(access.reason, 'template');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new Promise(r => { if (window.SubpassAuth?.ready) window.SubpassAuth.ready.then(r); else setTimeout(r, 800); }).then(init);
+        });
+        document.addEventListener('click', e => {
+            if (e.target.matches('.filter-pill')) {
+                document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                e.target.classList.add('active');
+                activeCat = e.target.dataset.cat; render();
+            }
+        });
+        document.addEventListener('input', e => { if (e.target.id === 'searchInput') render(); });
+        document.addEventListener('change', e => { if (e.target.id === 'sortFilter') render(); });
+    </script>
+</body>
+
+</html>

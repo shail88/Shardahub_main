@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | ShardaHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="lib/supabase.js"></script>
+</head>
+
+<body class="bg-dark text-white">
+
+    <div class="container py-5">
+        <a href="index.html" class="btn btn-outline-light btn-sm mb-4"><i class="bi bi-arrow-left"></i> Continue
+            Shopping</a>
+        <h2 class="fw-bold mb-4">Checkout</h2>
+
+        <div class="row g-5">
+            <!-- Cart Items -->
+            <div class="col-lg-7">
+                <div class="glass-card p-4">
+                    <h4 class="mb-4">Order Summary</h4>
+                    <div class="table-responsive">
+                        <table class="table cart-table align-middle">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartItems">
+                                <!-- Rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing -->
+            <div class="col-lg-5">
+                <div class="glass-card p-4 position-sticky" style="top: 2rem;">
+                    <h4 class="mb-4">Billing Details</h4>
+                    <form id="checkoutForm" onsubmit="event.preventDefault(); startPayment();">
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Full Name</label>
+                            <input type="text" class="form-control form-control-auth" id="fullName" required
+                                placeholder="John Doe">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Email Address</label>
+                            <input type="email" class="form-control form-control-auth" id="email" required
+                                placeholder="john@example.com">
+                        </div>
+
+                        <hr class="border-secondary my-4">
+
+                        <!-- Price Details Section -->
+                        <h6 class="mb-3 text-secondary text-uppercase fw-bold text-spacing">Price Details</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary">Price (<span id="totalItems">0</span> items)</span>
+                            <span class="text-white" id="mrpTotal">₹0</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary">Discount</span>
+                            <span class="text-success" id="discountTotal">- ₹0</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-secondary">Delivery Charges</span>
+                            <span class="text-success">FREE</span>
+                        </div>
+
+                        <hr class="border-secondary mb-3">
+
+                        <div class="d-flex justify-content-between mb-4 align-items-center">
+                            <span class="fs-5 fw-bold">Total Amount</span>
+                            <span class="fs-4 fw-bold text-gradient" id="cartTotal">₹0</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill glow-effect fs-5 fw-bold">
+                            Review & Pay
+                        </button>
+                        <div class="text-center mt-3">
+                            <small class="text-secondary"><i class="bi bi-lock-fill"></i> Secure Payment by
+                                Razorpay</small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

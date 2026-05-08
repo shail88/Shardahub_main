@@ -1,0 +1,13 @@
+/* Games Specific Styles */
+.game-icon-container {
+    background: rgba(25, 135, 84, 0.1);
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+    transition: var(--transition-base);
+}
+
+.glass:hover .game-icon-container {
+    background: rgba(25, 135, 84, 0.2);
+    transform: translateY(-5px);
+}

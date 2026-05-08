@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | ShardaHub</title>
+    <meta name="description" content="ShardaHub — Premium AI tools, courses, SaaS, games, robotics, and templates.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/core.css">
+    <style>
+        :root {
+            --accent: #0ea5e9;
+            --accent-glow: rgba(14, 165, 233, 0.35);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* ── Hero ── */
+        .product-hero {
+            background: radial-gradient(ellipse 80% 60% at 60% 0%, rgba(14, 165, 233, 0.08) 0%, transparent 70%), #0f172a;
+            padding: 100px 0 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* ── Pricing card ── */
+        .pricing-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            transition: border-color .3s, transform .3s;
+        }
+
+        .pricing-box:hover {
+            border-color: rgba(14, 165, 233, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .pricing-box.popular {
+            border-color: var(--accent);
+            box-shadow: 0 0 40px rgba(14, 165, 233, 0.2);
+        }
+
+        /* ── Sticky sidebar ── */
+        .sticky-widget {
+            position: sticky;
+            top: 90px;
+            z-index: 10;
+        }
+
+        /* ── Video ── */
+        .video-wrap {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .video-wrap iframe,
+        .video-wrap img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            object-fit: cover;
+        }
+
+        /* ── Feature check list ── */
+        .feature-list li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 8px 0;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* ── Impact card ── */
+        .impact-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: border-color .3s;
+        }
+
+        .impact-card:hover {
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        /* ── Workflow step ── */
+        .step-num {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* ── Tags ── */
+        .tag-badge {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            color: #7dd3fc;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        /* ── Tier buy btn ── */
+        .btn-buy-tier {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all .3s;
+        }
+
+        .btn-buy-tier:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.4);
+            color: #fff;
+        }
+
+        .btn-free-tier {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #e2e8f0;
+            font-weight: 600;
+            transition: all .3s;
+        }
+
+        .btn-free-tier:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        /* ── Game specific ── */
+        .game-hero {
+            background: radial-gradient(ellipse 80% 60% at 60% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 70%), #0f172a;
+        }
+
+        .game-tier-badge {
+            font-size: 0.65rem;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+
+        .tier-demo {
+            background: rgba(16, 185, 129, .15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, .3);
+        }
+
+        .tier-full {
+            background: rgba(14, 165, 233, .15);
+            color: #0ea5e9;
+            border: 1px solid rgba(14, 165, 233, .3);
+        }
+
+        .tier-src {
+            background: rgba(139, 92, 246, .15);
+            color: #8b5cf6;
+            border: 1px solid rgba(139, 92, 246, .3);
+        }
+
+        .tier-ent {
+            background: rgba(245, 158, 11, .15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, .3);
+        }
+
+        /* ── Robotics ── */
+        .robot-hero {
+            background: radial-gradient(ellipse 80% 60% at 60% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 70%), #0f172a;
+        }
+
+        /* ── Toast ── */
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .sharda-toast {
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            animation: slideIn .3s ease;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-success {
+            background: rgba(16, 185, 129, 0.9);
+            color: #fff;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+        }
+
+        .toast-danger {
+            background: rgba(239, 68, 68, 0.9);
+            color: #fff;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .toast-info {
+            background: rgba(14, 165, 233, 0.9);
+            color: #fff;
+            border: 1px solid rgba(14, 165, 233, 0.5);
+        }
+
+        .section-spacer {
+            margin-bottom: 4rem;
+        }
+
+        .reviews-grid .review-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+        }
+
+        @media(max-width:992px) {
+            .sticky-widget {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="shardahub-sidebar"></div>
+    <div id="toastContainer"></div>
+
+    <div class="main-wrapper">
+        <!-- ── HERO ── -->
+        <section class="product-hero" id="product-hero-section">
+            <div class="container-fluid">
+                <div class="row align-items-start">
+                    <div class="col-lg-8" style="z-index:1;">
+                        <nav aria-label="breadcrumb" class="mb-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html"
+                                        class="text-info text-decoration-none">ShardaHub</a></li>
+                                <li class="breadcrumb-item active text-secondary" id="bc-section">Product</li>
+                            </ol>
+                        </nav>
+
+                        <div id="prod-badges" class="d-flex gap-2 mb-3 flex-wrap"></div>
+
+                        <h1 class="display-3 fw-bold mb-3" id="prod-title">Loading...</h1>
+                        <p class="lead text-secondary mb-4 fs-4" id="prod-tagline"></p>
+
+                        <div class="d-flex align-items-center gap-4 mb-4 flex-wrap" id="review-row">
+                            <div class="d-flex align-items-center glass px-3 py-2 rounded-pill gap-2">
+                                <span class="text-warning fw-bold" id="prod-rating">4.9</span>
+                                <div class="text-warning small" id="star-display">★★★★½</div>
+                                <span class="text-secondary small" id="prod-review-count">(0 reviews)</span>
+                            </div>
+                            <div class="text-secondary small">
+                                <i class="bi bi-people-fill text-info me-1"></i>
+                                <span id="prod-enrolled">0 users</span>
+                            </div>
+                            <div id="prod-extra-badge"></div>
+                        </div>
+
+                        <div class="d-flex gap-3 text-secondary small flex-wrap">
+                            <span><i class="bi bi-person-badge me-1 text-info"></i><span id="prod-author">ShardaHub
+                                    Labs</span></span>
+                            <span><i class="bi bi-patch-check me-1 text-success"></i>Last updated <span
+                                    id="prod-update">2026</span></span>
+                            <span id="prod-level-badge"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── MAIN BODY ── -->
+        <div class="container-fluid py-5">
+            <div class="row">
+                <!-- Left: Content -->
+                <div class="col-lg-8" id="main-content-col">
+
+                    <!-- Description -->
+                    <div class="section-spacer">
+                        <h2 class="fw-bold mb-3">Why <span class="text-gradient" id="why-headline">ShardaHub?</span>
+                        </h2>
+                        <p class="lead text-secondary lh-lg" id="prod-description"></p>
+                    </div>
+
+                    <!-- Media -->
+                    <div class="section-spacer" id="media-section">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="fw-bold mb-0">Product Showcase</h3>
+                            <span class="badge bg-danger rounded-pill px-3 py-2" id="media-label"><i
+                                    class="bi bi-play-fill me-1"></i>LIVE DEMO</span>
+                        </div>
+                        <div class="video-wrap" id="media-container">
+                            <div class="d-flex align-items-center justify-content-center h-100 text-secondary"
+                                style="position:absolute;inset:0;">
+                                <div class="spinner-border text-info"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Impact / Features -->
+                    <div class="section-spacer" id="impact-section">
+                        <h3 class="fw-bold mb-4">Key <span class="text-info">Features</span></h3>
+                        <div class="row g-3" id="impact-grid"></div>
+                    </div>
+
+                    <!-- Workflow -->
+                    <div class="section-spacer glass p-4 p-md-5 rounded-4" id="workflow-section">
+                        <h3 class="fw-bold mb-5">How It <span class="text-gradient">Works</span></h3>
+                        <div class="d-flex flex-column gap-4" id="workflow-steps"></div>
+                    </div>
+
+                    <!-- Requirements -->
+                    <div class="section-spacer" id="requirements-section">
+                        <h3 class="fw-bold mb-4">What You <span class="text-info">Need</span></h3>
+                        <div class="row g-3" id="requirements-grid"></div>
+                    </div>
+
+                    <!-- Dynamic type-specific section injected by JS -->
+                    <div id="type-specific-section"></div>
+
+                    <!-- Reviews -->
+                    <div class="section-spacer" id="reviews-section">
+                        <h3 class="fw-bold mb-4">What Users <span class="text-gradient">Say</span></h3>
+                        <div class="reviews-grid row g-3" id="reviews-grid"></div>
+                    </div>
+
+                </div>
+
+                <!-- Right: Pricing Sidebar -->
+                <div class="col-lg-4">
+                    <div class="sticky-widget" id="pricing-sidebar">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-info"></div>
+                            <p class="text-secondary mt-2 small">Loading pricing...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="shardahub-footer"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="lib/supabase.js"></script>
+    <script src="assets/js/sharda-db.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/footer.js"></script>
+    <script src="assets/js/payments.js"></script>
+
+    <script>
+        // ─── UTILITY ────────────────────────────────────────────────────────────────
+
+        function toast(msg, type = 'success') {
+            const el = document.createElement('div');
+            el.className = `sharda-toast toast-${type}`;
+            el.innerHTML = `<i class="bi bi-${type === 'success' ? 'check-circle' : type === 'danger' ? 'x-circle' : 'info-circle'}-fill me-2"></i>${msg}`;
+            document.getElementById('toastContainer').appendChild(el);
+            setTimeout(() => el.remove(), 4000);
+        }
+
+        // ─── TYPE CONFIG ────────────────────────────────────────────────────────────
+
+        const TYPE_CONFIG = {
+            ai: { color: 'info', icon: 'bi-robot', label: 'AI Tool', hex: '#0ea5e9', heroClass: 'product-hero' },
+            saas: { color: 'warning', icon: 'bi-cloud-check-fill', label: 'SaaS', hex: '#f59e0b', heroClass: 'product-hero' },
+            course: { color: 'success', icon: 'bi-mortarboard-fill', label: 'Course', hex: '#10b981', heroClass: 'product-hero' },
+            game: { color: 'purple', icon: 'bi-controller', label: 'Game', hex: '#8b5cf6', heroClass: 'game-hero' },
+            robotic: { color: 'cyan', icon: 'bi-cpu-fill', label: 'Robotics/IoT', hex: '#06b6d4', heroClass: 'robot-hero' },
+            template: { color: 'danger', icon: 'bi-columns-gap', label: 'Template', hex: '#ef4444', heroClass: 'product-hero' },
+            generic: { color: 'info', icon: 'bi-box-seam', label: 'Product', hex: '#0ea5e9', heroClass: 'product-hero' }
+        };
+
+        // ─── STAR RENDERER ──────────────────────────────────────────────────────────
+
+        function renderStars(rating) {
+            const r = parseFloat(rating) || 0;
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (r >= i) stars += '<i class="bi bi-star-fill"></i>';
+                else if (r >= i - 0.5) stars += '<i class="bi bi-star-half"></i>';
+                else stars += '<i class="bi bi-star"></i>';
+            }
+            return stars;
+        }
+
+        // ─── TIER LABEL (games) ─────────────────────────────────────────────────────
+
+        function gameTierBadge(price, name) {
+            const n = (name || '').toLowerCase();
+            if (price === 0 || n.includes('demo') || n.includes('free')) return 'tier-demo';
+            if (n.includes('enterprise') || n.includes('ent')) return 'tier-ent';
+            if (n.includes('source') || n.includes('src') || n.includes('code')) return 'tier-src';
+            return 'tier-full';
+        }
+
+        // ─── PRICING CARD BUILDER ───────────────────────────────────────────────────
+
+        function buildPricingHTML(product, tiers, cfg) {
+            const type = product.product_type || 'generic';
+            const isFree = p => p.price_inr === 0;
+            const sortedTiers = [...tiers].sort((a, b) => a.price_inr - b.price_inr);
+
+            // Action URL fallback for free tier
+            function freeRedirect(tier) {
+                if (tier.action_url && tier.action_url.startsWith('http')) return tier.action_url;
+                const map = {
+                    course: 'course/index.html',
+                    ai: 'ai/index.html',
+                    saas: 'saas/index.html',
+                    game: 'games/dashboard.html',
+                    robotic: 'robotics/index.html',
+                    template: 'templates/index.html',
+                };
+                return map[type] || 'index.html';
+            }
+
+            if (sortedTiers.length === 0) {
+                // Single price product
+                const price = product.price_inr || 0;
+                return `
+            <div class="pricing-box p-4 mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <div class="text-secondary small mb-1">Total Price</div>
+                        <h2 class="fw-bold text-white mb-0">₹${price.toLocaleString('en-IN')}</h2>
+                        ${product.og_price_inr && product.og_price_inr > price ? `<s class="text-secondary small">₹${product.og_price_inr.toLocaleString('en-IN')}</s>` : ''}
+                    </div>
+                    <i class="bi ${cfg.icon} fs-2 text-info opacity-75"></i>
+                </div>
+                ${price === 0
+                        ? `<button class="btn btn-free-tier w-100 rounded-pill py-3 fw-bold mb-3"
+                              onclick="handleTierClick('${product.id}', null, 0, '', 'Free Access', '${type}')">
+                          <i class="bi bi-unlock me-2"></i>GET FREE ACCESS
+                       </button>`
+                        : `<button class="btn btn-buy-tier w-100 rounded-pill py-3 mb-3"
+                              onclick="handleTierClick('${product.id}', null, ${price}, '', '${product.title}', '${type}')">
+                          <i class="bi bi-cart-fill me-2"></i>BUY NOW — ₹${price.toLocaleString('en-IN')}
+                       </button>`
+                    }
+                <div class="text-center text-secondary small"><i class="bi bi-shield-check me-1 text-success"></i>Secure Razorpay Checkout</div>
+            </div>`;
+            }
+
+            return sortedTiers.map(plan => {
+                const free = isFree(plan);
+                const popular = plan.is_popular;
+                const features = Array.isArray(plan.features) ? plan.features : [];
+
+                let limitBadge = '';
+                if (type === 'ai') {
+                    const lim = plan.daily_limit;
+                    limitBadge = `<div class="bg-info bg-opacity-10 text-info small fw-bold py-2 px-3 rounded-3 mb-3 border border-info border-opacity-25 text-center">
+                    <i class="bi bi-lightning-fill me-1"></i>${lim === -1 ? 'Unlimited' : lim + '/day'} API Calls
+                </div>`;
+                }
+
+                // Game tier badge
+                let badgeClass = '';
+                if (type === 'game') badgeClass = gameTierBadge(plan.price_inr, plan.name);
+
+                let licenceLine = '';
+                if (type === 'template' || type === 'game') {
+                    const lt = plan.license_type || 'personal';
+                    licenceLine = `<div class="text-secondary x-small mt-1 mb-1 text-capitalize"><i class="bi bi-patch-check text-info me-1"></i>${lt} license</div>`;
+                }
+
+                let stockLine = '';
+                if (type === 'robotic') {
+                    stockLine = `<div class="text-success small mb-2"><i class="bi bi-box-seam me-1"></i>In Stock — Ships within 3–5 days</div>`;
+                }
+
+                const og = plan.og_price_inr || null;
+
+                return `
+            <div class="pricing-box p-4 mb-3 ${popular ? 'popular' : ''}">
+                ${popular ? `<div class="text-center mb-3"><span class="badge px-3 py-2 rounded-pill fw-bold" style="background:${cfg.hex};color:#000;">⭐ MOST POPULAR</span></div>` : ''}
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        ${type === 'game' ? `<span class="game-tier-badge ${badgeClass} d-inline-block mb-1">${plan.name}</span>`
+                        : `<span class="badge ${free ? 'bg-secondary' : 'bg-info text-dark'} mb-1 text-uppercase">${plan.name}</span>`}
+                        <h3 class="fw-bold text-white mb-0">${free ? 'Free' : '₹' + plan.price_inr.toLocaleString('en-IN')}</h3>
+                        ${og && og > plan.price_inr ? `<s class="text-secondary small">₹${og.toLocaleString('en-IN')}</s>` : ''}
+                        ${licenceLine}
+                        <div class="text-secondary" style="font-size:0.78rem;">${free ? 'Free to get started' : type === 'saas' || plan.is_subscription ? '/month' : 'One-time payment'}</div>
+                    </div>
+                    <i class="bi ${cfg.icon} fs-3 opacity-50" style="color:${cfg.hex}"></i>
+                </div>
+
+                ${limitBadge}
+                ${stockLine}
+
+                ${free
+                        ? `<button class="btn btn-free-tier w-100 rounded-pill py-2 fw-bold mb-3"
+                              onclick="handleTierClick('${product.id}','${plan.id}',0,'${plan.action_url || freeRedirect(plan)}','${plan.name} — Free','${type}')">
+                          <i class="bi bi-unlock me-2"></i>Get Started Free
+                       </button>`
+                        : `<div class="d-flex gap-2 mb-3">
+                          <button class="btn btn-buy-tier flex-grow-1 rounded-pill py-2"
+                                  id="btnBuy-${plan.id}"
+                                  onclick="handleTierClick('${product.id}','${plan.id}',${plan.price_inr},'${plan.action_url || ''}','${plan.name}','${type}')">
+                              <i class="bi bi-lightning-fill me-1"></i>Buy Now
+                          </button>
+                          <button class="btn btn-outline-info rounded-pill py-2 px-3" title="Add to Cart"
+                                  onclick="addToCartQuick('${product.id}','${plan.id}',${plan.price_inr},'${escStr(product.title + ' — ' + plan.name)}','${cfg.icon}','${type}')">
+                              <i class="bi bi-cart-plus"></i>
+                          </button>
+                       </div>`
+                    }
+
+                <ul class="list-unstyled mb-0 feature-list small text-secondary">
+                    ${features.map(f => `<li class="d-flex align-items-start gap-2"><i class="bi bi-check2 text-info mt-1 flex-shrink-0"></i><span>${f}</span></li>`).join('')}
+                </ul>
+
+                ${type === 'ai' ? `<div class="text-center mt-3"><span class="text-secondary" style="font-size:0.72rem;"><i class="bi bi-info-circle me-1"></i>Fair Usage Policy applies</span></div>` : ''}
+            </div>`;
+            }).join('') +
+                `<div class="glass p-3 rounded-3 text-center mt-2">
+            <p class="text-secondary mb-0 small">
+                <i class="bi bi-shield-fill-check text-success me-1"></i>
+                <strong class="text-white">100% Secure</strong> · Razorpay Protected · Instant Delivery
+            </p>
+        </div>`;
+        }
+
+        function escStr(s) { return (s || '').replace(/'/g, "\\'"); }
+
+        // ─── HANDLERS ───────────────────────────────────────────────────────────────
+
+        async function handleTierClick(productId, tierId, price, actionUrl, tierName, type) {
+            if (price === 0) {
+                toast(`${tierName} — access granted!`, 'success');
+                setTimeout(() => {
+                    if (actionUrl && actionUrl.startsWith('http')) { window.open(actionUrl, '_blank'); }
+                    else if (actionUrl) { window.location.href = actionUrl; }
+                }, 800);
+                return;
+            }
+
+            if (!window.SubpassAuth?.user) {
+                if (window.SubpassAuth) SubpassAuth.showLogin();
+                else { alert('Please login to purchase.'); window.location.href = 'login.html'; }
+                return;
+            }
+
+            // Add to cart then go to checkout
+            ShardaPayments.addToCart({
+                id: productId,
+                tierId: tierId,
+                name: tierName,
+                price: price,
+                icon: 'bi-box-seam',
+                category: type,
+                section: type
+            });
+            window.location.href = 'checkout.html';
+        }
+
+        async function addToCartQuick(productId, tierId, price, name, icon, type) {
+            ShardaPayments.addToCart({
+                id: productId,
+                tierId: tierId,
+                name: name,
+                price: price,
+                icon: icon || 'bi-box-seam',
+                category: type,
+                section: type
+            });
+            // toast shown by addToCart itself
+        }
+
+        // ─── SAMPLE REVIEWS (until live reviews table is populated) ─────────────────
+
+        const SAMPLE_REVIEWS = [
+            { name: 'Rahul M.', stars: 5, text: 'Absolutely transformed how I work. ROI was visible in week one.', date: 'Jan 2026' },
+            { name: 'Priya S.', stars: 5, text: 'Best purchase I made this year. The quality is unmatched.', date: 'Feb 2026' },
+            { name: 'Amit K.', stars: 4, text: 'Excellent product, very detailed and well-thought out.', date: 'Mar 2026' }
+        ];
+
+        // ─── MAIN INIT ──────────────────────────────────────────────────────────────
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            let id = params.get('id');
+            if (!id || id === 'null' || id === '') id = 'resume-ai';
+
+            // Try by ID first, then by slug
+            let product = await ShardaDB.getProduct(id);
+
+            if (!product) {
+                // Try fetching by slug
+                const { data } = await supabase.from('products')
+                    .select('*, categories(name,slug), product_tiers(*), courses(*)')
+                    .eq('slug', id).single();
+                product = data;
+            }
+
+            if (!product) {
+                document.getElementById('prod-title').innerText = 'Product Not Found';
+                document.getElementById('prod-tagline').innerHTML = `
+                <div class="alert alert-warning bg-warning bg-opacity-10 border-warning border-opacity-25 text-warning p-4 rounded-4 mt-3">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    The product <strong>"${id}"</strong> could not be found in our catalog.
+                    <div class="mt-3 d-flex gap-2 flex-wrap">
+                        <a href="index.html" class="btn btn-sm btn-warning rounded-pill px-4 fw-bold">Return Home</a>
+                        <a href="admin/index.html" class="btn btn-sm btn-outline-warning rounded-pill px-4 fw-bold">Admin Panel</a>
+                    </div>
+                </div>`;
+                document.getElementById('pricing-sidebar').innerHTML = '';
+                document.getElementById('review-row').classList.add('d-none');
+                document.getElementById('main-content-col').querySelector('.section-spacer:not(:first-child)')?.remove();
+                return;
+            }
+
+            const type = product.product_type || 'generic';
+            const cfg = TYPE_CONFIG[type] || TYPE_CONFIG.generic;
+            const tiers = product.product_tiers || [];
+            const meta = product.meta_data || {};
+
+            // ── Set Hero ──
+            document.getElementById('product-hero-section').className = `${cfg.heroClass}`;
+            document.getElementById('product-hero-section').style.padding = '100px 0 60px';
+            document.title = `${product.title} | ShardaHub`;
+            document.getElementById('bc-section').innerText = cfg.label;
+
+            // ── Badges ──
+            const badges = document.getElementById('prod-badges');
+            badges.innerHTML = `<span class="tag-badge"><i class="bi ${cfg.icon} me-1"></i>${cfg.label}</span>`;
+            if (product.is_featured) badges.innerHTML += `<span class="tag-badge" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:#fbbf24;"><i class="bi bi-star-fill me-1"></i>Featured</span>`;
+            if (type === 'course' && product.courses?.level) badges.innerHTML += `<span class="tag-badge">${product.courses.level}</span>`;
+
+            // ── Title & Meta ──
+            document.getElementById('prod-title').innerText = product.title || 'Untitled';
+            document.getElementById('prod-tagline').innerText = product.tagline || '';
+            document.getElementById('prod-rating').innerText = product.rating || '4.9';
+            document.getElementById('star-display').innerHTML = renderStars(product.rating || 4.9);
+            document.getElementById('prod-review-count').innerText = `(${(product.rating_count || 0).toLocaleString()} reviews)`;
+            document.getElementById('prod-enrolled').innerText = `${(product.enrollment_count || 0).toLocaleString()} ${type === 'course' ? 'students enrolled' : type === 'game' ? 'players' : 'users'}`;
+            document.getElementById('prod-author').innerText = product.courses?.instructor_name || 'ShardaHub Labs';
+            document.getElementById('prod-update').innerText = product.updated_at ? new Date(product.updated_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Mar 2026';
+            document.getElementById('prod-description').innerText = product.description || 'Expert-level performance and integration.';
+            document.getElementById('why-headline').innerText = (type === 'course') ? 'This Course?' : (type === 'game') ? 'This Game?' : (type === 'ai') ? 'ShardaAI?' : 'ShardaHub?';
+
+            // ── Level (course) ──
+            if (type === 'course' && product.courses) {
+                const c = product.courses;
+                document.getElementById('prod-level-badge').innerHTML = `<span class="tag-badge"><i class="bi bi-bar-chart me-1"></i>${c.level || 'All Levels'}</span> <span class="tag-badge"><i class="bi bi-clock me-1"></i>${c.duration_hours || 0}h</span>`;
+            }
+
+            // ── Game extra badge ──
+            if (type === 'game') {
+                document.getElementById('prod-extra-badge').innerHTML = `<div class="d-flex gap-1">
+                ${(meta.platforms || ['pc', 'web']).map(p => `<span class="badge bg-dark bg-opacity-75 text-capitalize border border-secondary">${p}</span>`).join('')}
+            </div>`;
+            }
+
+            // ── Media ──
+            const mediaContainer = document.getElementById('media-container');
+            const mediaLabel = document.getElementById('media-label');
+            if (product.video_url) {
+                let embedUrl = product.video_url;
+                if (embedUrl.includes('watch?v=')) embedUrl = embedUrl.replace('watch?v=', 'embed/');
+                else if (embedUrl.includes('youtu.be/')) embedUrl = 'https://www.youtube.com/embed/' + embedUrl.split('youtu.be/')[1];
+                mediaContainer.innerHTML = `<iframe src="${embedUrl}" title="${product.title}" frameborder="0" allowfullscreen></iframe>`;
+                mediaLabel.innerHTML = `<i class="bi bi-play-fill me-1"></i>VIDEO DEMO`;
+            } else if (product.image_url) {
+                mediaContainer.innerHTML = `<img src="${sanitizeImg(product.image_url)}" alt="${product.title}" onerror="this.onerror=null; this.src=window.SHARDA_PLACEHOLDER;">`;
+                mediaLabel.innerHTML = `<i class="bi bi-image me-1"></i>SCREENSHOT`;
+            } else {
+                document.getElementById('media-section').classList.add('d-none');
+            }
+
+            // ── Impact Points ──
+            const impactGrid = document.getElementById('impact-grid');
+            const impacts = meta.business_impact || [];
+            if (impacts.length > 0) {
+                impactGrid.innerHTML = impacts.map(f => `
+                <div class="col-md-6">
+                    <div class="impact-card d-flex align-items-start gap-3">
+                        <i class="bi bi-check-circle-fill text-info fs-5 flex-shrink-0 mt-1"></i>
+                        <div>
+                            <div class="text-white fw-semibold">${f}</div>
+                        </div>
+                    </div>
+                </div>`).join('');
+            } else {
+                document.getElementById('impact-section').classList.add('d-none');
+            }
+
+            // ── Workflow Steps ──
+            const workflowSteps = document.getElementById('workflow-steps');
+            const workflow = meta.workflow || [];
+            if (workflow.length > 0) {
+                workflowSteps.innerHTML = workflow.map(s => `
+                <div class="d-flex align-items-start gap-4">
+                    <div class="step-num">${s.step}</div>
+                    <div>
+                        <h5 class="fw-bold text-white mb-1">${s.title}</h5>
+                        <p class="text-secondary mb-0 lh-lg">${s.desc}</p>
+                    </div>
+                </div>`).join('');
+            } else {
+                document.getElementById('workflow-section').classList.add('d-none');
+            }
+
+            // ── Requirements ──
+            const reqGrid = document.getElementById('requirements-grid');
+            const reqs = meta.requirements || [];
+            if (reqs.length > 0) {
+                reqGrid.innerHTML = reqs.map(r => `
+                <div class="col-md-4">
+                    <div class="glass p-3 text-center rounded-3">
+                        <i class="bi bi-check2-circle text-info fs-5 d-block mb-2"></i>
+                        <div class="text-white small fw-medium">${r}</div>
+                    </div>
+                </div>`).join('');
+            } else {
+                document.getElementById('requirements-section').classList.add('d-none');
+            }
+
+            // ── TYPE-SPECIFIC SECTION ──
+            const typeSection = document.getElementById('type-specific-section');
+
+            if (type === 'course') {
+                // Curriculum
+                const curriculum = await ShardaDB.getCourseCurriculum(product.id);
+                if (curriculum && curriculum.length > 0) {
+                    typeSection.innerHTML = `
+                <div class="section-spacer glass p-4 p-md-5 rounded-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <h3 class="fw-bold mb-0">Course <span class="text-info">Curriculum</span></h3>
+                        <span class="text-secondary small">${curriculum.length} sections</span>
+                    </div>
+                    <div class="accordion accordion-flush" id="curriculumAccordion">
+                        ${curriculum.map((m, i) => `
+                        <div class="accordion-item bg-transparent border-secondary border-opacity-20 mb-2 rounded-3 overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button bg-dark bg-opacity-25 text-white shadow-none ${i === 0 ? '' : 'collapsed'}" 
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#mod-${m.id}">
+                                    <div class="d-flex flex-column text-start">
+                                        <span class="text-info" style="font-size:0.7rem;font-weight:700;">SECTION ${i + 1}</span>
+                                        <span class="fw-bold">${m.title}</span>
+                                        <span class="text-secondary" style="font-size:0.75rem;">${(m.lessons || []).length} lessons · ${(m.lessons || []).reduce((a, l) => a + (l.duration_mins || 10), 0)} mins</span>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="mod-${m.id}" class="accordion-collapse collapse ${i === 0 ? 'show' : ''}" data-bs-parent="#curriculumAccordion">
+                                <div class="accordion-body bg-dark bg-opacity-10 py-0">
+                                    <ul class="list-unstyled mb-0">
+                                        ${(m.lessons || []).sort((a, b) => a.order_index - b.order_index).map(l => `
+                                        <li class="py-3 d-flex align-items-center gap-3 border-bottom border-secondary border-opacity-10">
+                                            <i class="bi ${l.content_type === 'video' ? 'bi-play-circle-fill text-info' : 'bi-file-earmark-text text-secondary'} fs-5"></i>
+                                            <div class="flex-grow-1">
+                                                <div class="text-white small fw-medium">${l.title}</div>
+                                                <div class="text-secondary" style="font-size:0.72rem;">${l.duration_mins || 10} mins</div>
+                                            </div>
+                                            ${l.is_preview ? '<span class="badge bg-info text-dark x-small">Preview</span>' : '<i class="bi bi-lock-fill text-secondary opacity-25"></i>'}
+                                        </li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>`).join('')}
+                    </div>
+                </div>`;
+                } else {
+                    // Show placeholder curriculum notice
+                    typeSection.innerHTML = `
+                <div class="section-spacer glass p-4 rounded-4 text-center">
+                    <i class="bi bi-journal-bookmark display-4 text-info mb-3 d-block opacity-50"></i>
+                    <h5 class="fw-bold text-white">Curriculum coming soon</h5>
+                    <p class="text-secondary small">Add modules and lessons via the Admin Panel.</p>
+                    <a href="admin/index.html" class="btn btn-sm btn-outline-info rounded-pill px-4">Go to Admin</a>
+                </div>`;
+                }
+            }
+
+            else if (type === 'ai') {
+                typeSection.innerHTML = `
+            <div class="section-spacer glass p-4 p-md-5 rounded-4 border border-info border-opacity-10" 
+                 style="background: radial-gradient(circle at top right, rgba(14,165,233,0.05), transparent);">
+                <h3 class="fw-bold mb-4">ShardaAI <span class="text-gradient">Infrastructure</span></h3>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="impact-card">
+                            <h5 class="text-white fw-bold mb-2"><i class="bi bi-cpu-fill text-info me-2"></i>Compute Engine</h5>
+                            <p class="text-secondary small lh-lg mb-0">Dedicated GPU optimization for sub-second latency. Tuned for high-concurrency enterprise requests.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="impact-card">
+                            <h5 class="text-white fw-bold mb-2"><i class="bi bi-shield-lock-fill text-info me-2"></i>Data Privacy</h5>
+                            <p class="text-secondary small lh-lg mb-0">Enterprise-grade security. Your prompts and outputs are never used to train base models.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="impact-card">
+                            <h5 class="text-white fw-bold mb-2"><i class="bi bi-lightning-fill text-info me-2"></i>Response Speed</h5>
+                            <p class="text-secondary small lh-lg mb-0">P99 latency under 800ms. Our architecture is built for real-time developer workflows.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="impact-card">
+                            <h5 class="text-white fw-bold mb-2"><i class="bi bi-graph-up-arrow text-info me-2"></i>Uptime SLA</h5>
+                            <p class="text-secondary small lh-lg mb-0">99.9% uptime guaranteed. Auto-failover across regions with zero-downtime deployments.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            }
+
+            else if (type === 'saas') {
+                typeSection.innerHTML = `
+            <div class="section-spacer glass p-4 p-md-5 rounded-4 border border-warning border-opacity-10"
+                 style="background: radial-gradient(circle at top right, rgba(245,158,11,0.05), transparent);">
+                <h3 class="fw-bold mb-4">Enterprise <span class="text-gradient">Capabilities</span></h3>
+                <div class="row g-4">
+                    <div class="col-md-4"><div class="text-center p-3"><i class="bi bi-shield-check display-4 text-warning d-block mb-2"></i><div class="fw-bold text-white">SOC-2 Ready</div><div class="text-secondary small">Enterprise compliance</div></div></div>
+                    <div class="col-md-4"><div class="text-center p-3"><i class="bi bi-plug display-4 text-warning d-block mb-2"></i><div class="fw-bold text-white">API-First</div><div class="text-secondary small">Full REST API</div></div></div>
+                    <div class="col-md-4"><div class="text-center p-3"><i class="bi bi-people-fill display-4 text-warning d-block mb-2"></i><div class="fw-bold text-white">Team Roles</div><div class="text-secondary small">Role-based access</div></div></div>
+                </div>
+            </div>`;
+            }
+
+            else if (type === 'game') {
+                const platforms = meta.platforms || ['pc', 'web'];
+                typeSection.innerHTML = `
+            <div class="section-spacer glass p-4 p-md-5 rounded-4" style="border:1px solid rgba(139,92,246,0.2);background:radial-gradient(circle at top right,rgba(139,92,246,0.05),transparent);">
+                <h3 class="fw-bold mb-4" style="color:#c4b5fd;">Platform <span class="text-gradient">Support</span></h3>
+                <div class="d-flex gap-3 flex-wrap mb-4">
+                    ${platforms.map(p => {
+                    const icons = { android: 'bi-phone-fill', pc: 'bi-laptop', web: 'bi-globe', ios: 'bi-apple' };
+                    return `<div class="glass p-3 rounded-3 text-center" style="min-width:100px;">
+                            <i class="bi ${icons[p] || 'bi-device-hdd'} fs-2 d-block mb-2" style="color:#8b5cf6;"></i>
+                            <div class="text-white fw-medium small text-capitalize">${p}</div>
+                        </div>`;
+                }).join('')}
+                </div>
+                ${meta.genre ? `<div class="text-secondary small"><i class="bi bi-controller me-2 text-info"></i>Genre: <strong class="text-white">${meta.genre}</strong></div>` : ''}
+                ${meta.engine ? `<div class="text-secondary small mt-1"><i class="bi bi-gear me-2 text-info"></i>Engine: <strong class="text-white">${meta.engine}</strong></div>` : ''}
+            </div>`;
+            }
+
+            else if (type === 'robotic') {
+                typeSection.innerHTML = `
+            <div class="section-spacer glass p-4 p-md-5 rounded-4" style="border:1px solid rgba(6,182,212,0.2);">
+                <h3 class="fw-bold mb-4" style="color:#67e8f9;">Shipping & <span class="text-gradient">Warranty</span></h3>
+                <div class="row g-4">
+                    <div class="col-md-4"><div class="impact-card text-center"><i class="bi bi-truck fs-2 d-block mb-2" style="color:#06b6d4;"></i><div class="fw-bold text-white">Fast Delivery</div><div class="text-secondary small">3–5 business days</div></div></div>
+                    <div class="col-md-4"><div class="impact-card text-center"><i class="bi bi-shield-check fs-2 d-block mb-2" style="color:#06b6d4;"></i><div class="fw-bold text-white">1 Year Warranty</div><div class="text-secondary small">Manufacturer covered</div></div></div>
+                    <div class="col-md-4"><div class="impact-card text-center"><i class="bi bi-box-seam fs-2 d-block mb-2" style="color:#06b6d4;"></i><div class="fw-bold text-white">All Parts Included</div><div class="text-secondary small">No extra purchases</div></div></div>
+                </div>
+            </div>`;
+            }
+
+            // ── Reviews (sample) ──
+            const reviewsGrid = document.getElementById('reviews-grid');
+            reviewsGrid.innerHTML = SAMPLE_REVIEWS.map(r => `
+            <div class="col-md-4">
+                <div class="review-card">
+                    <div class="text-warning mb-2">${renderStars(r.stars)}</div>
+                    <p class="text-secondary small lh-lg mb-3">"${r.text}"</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="text-white small">${r.name}</strong>
+                        <span class="text-secondary" style="font-size:0.7rem;">${r.date}</span>
+                    </div>
+                </div>
+            </div>`).join('');
+
+            // ── Pricing Sidebar ──
+            const sidebar = document.getElementById('pricing-sidebar');
+            sidebar.innerHTML = buildPricingHTML(product, tiers, cfg);
+        });
+    </script>
+</body>
+
+</html>

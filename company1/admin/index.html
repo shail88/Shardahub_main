@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Hub — ShardaHub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --ai-accent: #0ea5e9;
+            --success: #10b981;
+            --warn: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060b14;
+            color: #e2e8f0;
+            min-height: 100vh
+        }
+
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: rgba(255, 255, 255, .03);
+            border-right: 1px solid rgba(255, 255, 255, .08);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 200;
+            padding: 24px 16px;
+            transition: transform .3s
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 28px;
+            min-height: 100vh
+        }
+
+        .nav-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: .88rem;
+            border: none;
+            background: none;
+            color: #94a3b8;
+            width: 100%;
+            text-align: left
+        }
+
+        .nav-item-btn:hover {
+            background: rgba(255, 255, 255, .06);
+            color: #fff
+        }
+
+        .nav-item-btn.active {
+            background: rgba(14, 165, 233, .15);
+            color: #0ea5e9
+        }
+
+        .stat-card {
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04)
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1
+        }
+
+        .glass-table {
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: 16px;
+            overflow: hidden
+        }
+
+        .glass-table th {
+            background: rgba(255, 255, 255, .04);
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #64748b;
+            border: none;
+            padding: 14px 16px
+        }
+
+        .glass-table td {
+            border-color: rgba(255, 255, 255, .06);
+            padding: 12px 16px;
+            font-size: .88rem
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            color: #fff
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff
+        }
+
+        .tab-section {
+            display: none
+        }
+
+        .tab-section.active {
+            display: block
+        }
+
+        .badge-section {
+            font-size: .72rem;
+            padding: 3px 8px;
+            border-radius: 6px
+        }
+
+        .section-course {
+            background: rgba(14, 165, 233, .2);
+            color: #0ea5e9
+        }
+
+        .section-ai {
+            background: rgba(139, 92, 246, .2);
+            color: #8b5cf6
+        }
+
+        .section-saas {
+            background: rgba(99, 102, 241, .2);
+            color: #6366f1
+        }
+
+        .section-game {
+            background: rgba(16, 185, 129, .2);
+            color: #10b981
+        }
+
+        .section-template {
+            background: rgba(245, 158, 11, .2);
+            color: #f59e0b
+        }
+
+        .section-robotic {
+            background: rgba(239, 68, 68, .2);
+            color: #ef4444
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px
+        }
+
+        .form-control-dark {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 9px 14px
+        }
+
+        .form-control-dark:focus {
+            background: rgba(255, 255, 255, .08);
+            border-color: #0ea5e9;
+            color: #e2e8f0;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, .12);
+            outline: none
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="d-flex align-items-center gap-2 mb-4 ps-2">
+            <i class="bi bi-hexagon-fill text-info fs-4"></i>
+            <span class="fw-bold fs-5">Admin Hub</span>
+        </div>
+        ${[
+        {id:'dashboard',icon:'bi-speedometer2',label:'Dashboard'},
+        {id:'analytics',icon:'bi-bar-chart-line',label:'Analytics'},
+        {id:'orders',icon:'bi-bag',label:'Orders'},
+        {id:'users',icon:'bi-people',label:'Users'},
+        {id:'products',icon:'bi-grid',label:'Products'},
+        {id:'coupons',icon:'bi-ticket-perforated',label:'Coupons'},
+        {id:'razorpay',icon:'bi-credit-card',label:'Razorpay Keys'},
+        {id:'inventory',icon:'bi-boxes',label:'Inventory'},
+        {id:'subscriptions',icon:'bi-arrow-repeat',label:'Subscriptions'},
+        ].map(n=>`
+        <button class="nav-item-btn ${n.id==='dashboard'?'active':''}" onclick="showTab('${n.id}',this)">
+            <i class="bi ${n.icon}"></i>${n.label}
+        </button>`).join('')}
+        <hr class="border-secondary">
+        <a href="../index.html" class="nav-item-btn text-secondary text-decoration-none">
+            <i class="bi bi-arrow-left"></i>Back to Site
+        </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header Bar -->
+        <div class="d-flex align-items-center justify-content-between mb-5">
+            <div>
+                <h4 class="fw-bold mb-0" id="pageHeading">Dashboard</h4>
+                <div class="small text-secondary" id="pageDate"></div>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <span
+                    class="badge bg-danger bg-opacity-15 text-danger border border-danger border-opacity-25 px-3 py-2">
+                    <i class="bi bi-shield-lock me-1"></i>Admin Only
+                </span>
+            </div>
+        </div>
+
+        <!-- ── DASHBOARD TAB ── -->
+        <div id="tab-dashboard" class="tab-section active">
+            <!-- KPI Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Total Revenue</span>
+                            <i class="bi bi-currency-rupee text-success fs-4"></i>
+                        </div>
+                        <div class="stat-value text-success mb-1" id="adminRevenue">—</div>
+                        <div class="small text-secondary">Lifetime earnings</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Total Users</span>
+                            <i class="bi bi-people text-info fs-4"></i>
+                        </div>
+                        <div class="stat-value text-info mb-1" id="adminUsers">—</div>
+                        <div class="small text-secondary">Registered accounts</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Active Products</span>
+                            <i class="bi bi-grid text-warning fs-4"></i>
+                        </div>
+                        <div class="stat-value text-warning mb-1" id="adminProducts">—</div>
+                        <div class="small text-secondary">Listed on platform</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary small">Enrollments</span>
+                            <i class="bi bi-mortarboard text-purple fs-4" style="color:var(--purple)"></i>
+                        </div>
+                        <div class="stat-value mb-1" style="color:var(--purple)" id="adminEnrollments">—</div>
+                        <div class="small text-secondary">Total course enrollments</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-4">Revenue by Section</h6>
+                        <div class="chart-container"><canvas id="revenueChart"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-4">Product Mix</h6>
+                        <div class="chart-container"><canvas id="sectionPieChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Mini -->
+            <div class="stat-card">
+                <div class="d-flex justify-content-between mb-3">
+                    <h6 class="fw-bold mb-0">Recent Orders</h6>
+                    <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="showTab('orders',null)">View
+                        All</button>
+                </div>
+                <div id="recentOrdersMini"></div>
+            </div>
+        </div>
+
+        <!-- ── ANALYTICS TAB ── -->
+        <div id="tab-analytics" class="tab-section">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-4">Revenue by Section (Bar)</h6>
+                        <div class="chart-container"><canvas id="sectionBarChart"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-4">New Users (Last 7 Days)</h6>
+                        <div class="chart-container"><canvas id="usersChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── ORDERS TAB ── -->
+        <div id="tab-orders" class="tab-section">
+            <div class="d-flex gap-2 mb-3 flex-wrap">
+                <input type="text" id="orderSearch" class="form-control-dark"
+                    placeholder="Search by user email or ID..." style="max-width:280px">
+                <select id="orderSectionFilter" class="form-control-dark" style="width:auto">
+                    <option value="">All Sections</option>
+                    <option value="course">Course</option>
+                    <option value="ai">AI</option>
+                    <option value="saas">SaaS</option>
+                    <option value="game">Games</option>
+                    <option value="template">Templates</option>
+                    <option value="robotic">Robotics</option>
+                </select>
+            </div>
+            <div class="glass-table">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User</th>
+                            <th>Section</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-secondary py-4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── USERS TAB ── -->
+        <div id="tab-users" class="tab-section">
+            <div class="glass-table">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="5" class="text-center text-secondary py-4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── COUPONS TAB ── -->
+        <div id="tab-coupons" class="tab-section">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="stat-card">
+                        <h6 class="fw-bold mb-3">Create Coupon</h6>
+                        <div class="d-flex flex-column gap-3">
+                            <input type="text" id="couponCode" class="form-control-dark"
+                                placeholder="Coupon Code (e.g. SAVE20)">
+                            <select id="couponType" class="form-control-dark">
+                                <option value="percent">Percentage Discount</option>
+                                <option value="flat">Flat Discount (₹)</option>
+                            </select>
+                            <input type="number" id="couponValue" class="form-control-dark"
+                                placeholder="Value (e.g. 20 for 20%)">
+                            <input type="date" id="couponExpiry" class="form-control-dark" placeholder="Expiry Date">
+                            <input type="number" id="couponLimit" class="form-control-dark"
+                                placeholder="Max uses (leave blank = unlimited)">
+                            <button class="btn btn-gradient rounded-pill fw-semibold" onclick="createCoupon()">
+                                <i class="bi bi-plus-circle me-1"></i>Create Coupon
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="glass-table">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Type</th>
+                                    <th>Value</th>
+                                    <th>Used</th>
+                                    <th>Expiry</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="couponsTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center text-secondary py-4">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── RAZORPAY KEYS TAB ── -->
+        <div id="tab-razorpay" class="tab-section">
+            <div class="alert alert-warning border border-warning border-opacity-25 rounded-3 mb-4">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong>Security Note:</strong> These keys are stored in your Supabase database. Ensure RLS is enabled
+                on <code>razorpay_accounts</code> and only admins can read <code>key_secret</code>.
+            </div>
+            <div class="row g-3" id="rzpKeysGrid">
+                ${['course','ai','saas','game','template','robotic'].map(s=>`
+                <div class="col-md-6">
+                    <div class="stat-card">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="badge-section section-${s} px-2 py-1 rounded">${s.toUpperCase()}</span>
+                            <span class="fw-semibold text-capitalize">ShardaHub ${s}</span>
+                        </div>
+                        <input type="text" class="form-control-dark w-100 mb-2" id="rzp_${s}_key"
+                            placeholder="Key ID (rzp_live_XXXX)">
+                        <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="saveRzpKey('${s}')">
+                            <i class="bi bi-save me-1"></i>Save Key
+                        </button>
+                        <div id="rzp_${s}_status" class="small mt-2 text-secondary"></div>
+                    </div>
+                </div>`).join('')}
+            </div>
+        </div>
+
+        <!-- ── INVENTORY TAB ── -->
+        <div id="tab-inventory" class="tab-section">
+            <div class="glass-table">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>SKU</th>
+                            <th>Stock</th>
+                            <th>Reserved</th>
+                            <th>Reorder Level</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-secondary py-4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── SUBSCRIPTIONS TAB ── -->
+        <div id="tab-subscriptions" class="tab-section">
+            <div class="glass-table">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Product</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Expires</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subscriptionsTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-secondary py-4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── PRODUCTS TAB ── -->
+        <div id="tab-products" class="tab-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h5 class="fw-bold mb-0">Ecosystem Master Inventory</h5>
+                    <p class="text-secondary small mb-0">Manage products, courses, tools and their tiers.</p>
+                </div>
+                <button class="btn btn-gradient rounded-pill px-4" onclick="openProductModal()">
+                    <i class="bi bi-plus-lg me-2"></i>Add New Product
+                </button>
+            </div>
+
+            <div class="d-flex gap-2 mb-4">
+                <input type="text" id="productSearch" class="form-control-dark" placeholder="Search products..."
+                    style="flex: 1">
+                <select id="productTypeFilter" class="form-control-dark" style="width: 180px" onchange="loadProducts()">
+                    <option value="">All Categories</option>
+                    <option value="course">Education</option>
+                    <option value="ai">AI Lab</option>
+                    <option value="saas">SaaS</option>
+                    <option value="game">Gaming</option>
+                    <option value="template">Templates</option>
+                    <option value="robotic">Robotics</option>
+                </select>
+            </div>
+
+            <div class="glass-table shadow-lg">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px">ID</th>
+                            <th>Product Detail</th>
+                            <th>Category</th>
+                            <th>Base Price</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-secondary py-5">
+                                <div class="spinner-border text-info spinner-border-sm me-2"></div>Loading products...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Unified Product Modal -->
+        <div class="modal fade" id="productModal" tabindex="-1">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content glass border border-secondary rounded-4 overflow-hidden">
+                    <div class="modal-header border-bottom border-white border-opacity-10 p-4">
+                        <h5 class="modal-title fw-bold" id="productModalTitle">Add/Edit Product</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="productForm">
+                            <input type="hidden" id="edit-prod-id">
+                            <div class="row g-4">
+                                <!-- Basic Info -->
+                                <div class="col-lg-7">
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label small text-secondary">PRODUCT SLUG (Permanent
+                                                ID)</label>
+                                            <input type="text" id="prod-slug" class="form-control-dark w-100"
+                                                placeholder="e.g. advance-python-course">
+                                        </div>
+                                        <div class="col-md-3 d-flex align-items-center pt-4">
+                                            <div class="form-check form-switch mb-0">
+                                                <input class="form-check-input" type="checkbox" id="prod-active"
+                                                    checked>
+                                                <label class="form-check-label small text-secondary ms-1"
+                                                    for="prod-active">Active</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9 d-none"> <!-- Placeholder to fix grid --> </div>
+                                        <div class="col-md-8">
+                                            <label class="form-label small text-secondary">TITLE</label>
+                                            <input type="text" id="prod-title" class="form-control-dark w-100"
+                                                placeholder="Product Name">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small text-secondary">SECTION</label>
+                                            <select id="prod-category" class="form-control-dark w-100"
+                                                onchange="toggleCategorySpecifics()">
+                                                <option value="course">Education / Course</option>
+                                                <option value="ai">AI Tool / Lab</option>
+                                                <option value="saas">SaaS Software</option>
+                                                <option value="game">Game / License</option>
+                                                <option value="template">Design Template</option>
+                                                <option value="robotic">Robotics / Stem</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12" id="subcategory-wrapper">
+                                            <label class="form-label small text-secondary">SUBCATEGORY / TAG (e.g.
+                                                website, ui-kit, dashboard, landing, doc)</label>
+                                            <input type="text" id="prod-subcategory" class="form-control-dark w-100"
+                                                placeholder="website, ui-kit, dashboard, etc.">
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label small text-secondary">TAGLINE</label>
+                                            <input type="text" id="prod-tagline" class="form-control-dark w-100"
+                                                placeholder="Short catchphrase">
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label small text-secondary">DESCRIPTION</label>
+                                            <textarea id="prod-desc" class="form-control-dark w-100" rows="3"
+                                                placeholder="Full product details..."></textarea>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-secondary">IMAGE URL</label>
+                                            <input type="text" id="prod-image" class="form-control-dark w-100"
+                                                placeholder="https://...">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-secondary">VIDEO/PREVIEW URL</label>
+                                            <input type="text" id="prod-video" class="form-control-dark w-100"
+                                                placeholder="Youtube link">
+                                        </div>
+
+                                        <!-- Expert Metadata Sections -->
+                                        <div class="col-12">
+                                            <div class="glass p-3 rounded-3 border border-white border-opacity-10 mb-3">
+                                                <h6 class="small fw-bold text-info mb-3">EXPERT CONTENT (METADATA)</h6>
+
+                                                <label class="form-label smaller text-secondary">IMPACT POINTS (one per
+                                                    line)</label>
+                                                <textarea id="prod-impact" class="form-control-dark w-100 mb-3" rows="2"
+                                                    placeholder="Premium Features&#10;Expert Implementation"></textarea>
+
+                                                <label class="form-label smaller text-secondary">TECHNICAL REQUIREMENTS
+                                                    (one per line)</label>
+                                                <textarea id="prod-requirements" class="form-control-dark w-100 mb-3"
+                                                    rows="2" placeholder="Desktop Access&#10;Active Account"></textarea>
+
+                                                <label class="form-label smaller text-secondary">WORKFLOW STEPS</label>
+                                                <div id="workflow-steps-container"
+                                                    class="d-flex flex-column gap-2 mb-2"></div>
+                                                <button type="button" class="btn btn-sm btn-outline-info"
+                                                    onclick="addWorkflowStepRow()">+ Add Step</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Course Specifics -->
+                                        <div class="col-12 category-specific course-only">
+                                            <div
+                                                class="bg-info bg-opacity-10 p-3 rounded-3 border border-info border-opacity-25">
+                                                <h6 class="text-info small fw-bold mb-3"><i
+                                                        class="bi bi-mortarboard me-2"></i>COURSE DETAILS</h6>
+                                                <div class="row g-2">
+                                                    <div class="col-md-4">
+                                                        <input type="text" id="course-instructor"
+                                                            class="form-control-dark w-100"
+                                                            placeholder="Instructor Name">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <select id="course-level" class="form-control-dark w-100">
+                                                            <option>Beginner</option>
+                                                            <option>Intermediate</option>
+                                                            <option>Advanced</option>
+                                                            <option>All Levels</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="number" id="course-duration"
+                                                            class="form-control-dark w-100" placeholder="Hours">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Robotics Specifics -->
+                                        <div class="col-12 category-specific robotic-only d-none">
+                                            <div
+                                                class="bg-danger bg-opacity-10 p-3 rounded-3 border border-danger border-opacity-25">
+                                                <h6 class="text-danger small fw-bold mb-3"><i
+                                                        class="bi bi-boxes me-2"></i>INVENTORY CONTROL</h6>
+                                                <div class="row g-2">
+                                                    <div class="col-md-4">
+                                                        <input type="number" id="robot-stock"
+                                                            class="form-control-dark w-100" placeholder="Current Stock">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="number" id="robot-reorder"
+                                                            class="form-control-dark w-100" placeholder="Reorder Level">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" id="robot-sku"
+                                                            class="form-control-dark w-100" placeholder="SKU Code">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tiers Management -->
+                                <div class="col-lg-5 border-start border-white border-opacity-10">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="fw-bold mb-0">Product Tiers / Plans</h6>
+                                        <button type="button" class="btn btn-sm btn-outline-info rounded-pill"
+                                            onclick="addNewTierRow()">
+                                            <i class="bi bi-plus-lg me-1"></i>Add Tier
+                                        </button>
+                                    </div>
+                                    <div id="tiersContainer" class="d-flex flex-column gap-3 overflow-auto"
+                                        style="max-height: 400px">
+                                        <!-- Tiers populated here -->
+                                        <div class="text-center py-4 text-secondary small">
+                                            Save product basics first to manage tiers easily.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-top border-white border-opacity-10 p-4">
+                        <button type="button" class="btn btn-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-gradient rounded-pill px-5 fw-bold"
+                            onclick="saveFullProduct()">
+                            <i class="bi bi-cloud-arrow-up me-2"></i>SAVE PRODUCT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/sharda-db.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="../assets/js/payments.js"></script>
+    <script>
+        window.ShardaBaseUrl = '../';
+        document.getElementById('pageDate').textContent = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        let revenueChartInst, pieChartInst, barChartInst, usersChartInst;
+        const SECTION_COLORS = { course: '#0ea5e9', ai: '#8b5cf6', saas: '#6366f1', game: '#10b981', template: '#f59e0b', robotic: '#ef4444' };
+
+        async function init() {
+            await new Promise(r => { if (window.SubpassAuth?.ready) window.SubpassAuth.ready.then(r); else setTimeout(r, 800); });
+            const user = window.SubpassAuth?.user;
+            if (!user || user.role !== 'admin') {
+                alert('Admin access required.'); window.location.href = '../index.html'; return;
+            }
+            loadDashboard();
+        }
+
+        async function loadDashboard() {
+            const stats = await ShardaDB.getAdminStats();
+            document.getElementById('adminRevenue').textContent = '₹' + stats.totalRevenue.toLocaleString();
+            document.getElementById('adminUsers').textContent = stats.totalUsers.toLocaleString();
+            document.getElementById('adminProducts').textContent = stats.activeProducts.toLocaleString();
+            document.getElementById('adminEnrollments').textContent = stats.totalEnrollments.toLocaleString();
+
+            const revenueBySection = await ShardaDB.getRevenueBySection();
+            renderRevenueCharts(revenueBySection);
+
+            const orders = await ShardaDB.getRecentOrders(6);
+            renderMiniOrders(orders);
+        }
+
+        function renderRevenueCharts(data) {
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            const colors = labels.map(l => SECTION_COLORS[l] || '#64748b');
+
+            // Bar chart
+            const ctx1 = document.getElementById('revenueChart').getContext('2d');
+            if (revenueChartInst) revenueChartInst.destroy();
+            revenueChartInst = new Chart(ctx1, { type: 'bar', data: { labels, datasets: [{ data: values, backgroundColor: colors.map(c => c + '66'), borderColor: colors, borderWidth: 2, borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#94a3b8' } }, y: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#94a3b8', callback: v => '₹' + v.toLocaleString() } } } } });
+
+            // Pie chart
+            const ctx2 = document.getElementById('sectionPieChart').getContext('2d');
+            if (pieChartInst) pieChartInst.destroy();
+            pieChartInst = new Chart(ctx2, { type: 'doughnut', data: { labels, datasets: [{ data: values, backgroundColor: colors.map(c => c + 'aa'), borderColor: colors, borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', padding: 12, font: { size: 11 } } } } } });
+        }
+
+        function renderMiniOrders(orders) {
+            const tbody = document.getElementById('recentOrdersMini');
+            tbody.innerHTML = `<table class="table table-dark table-hover mb-0"><thead><tr>
+    <th class="small text-secondary">ID</th><th class="small text-secondary">User</th>
+    <th class="small text-secondary">Section</th><th class="small text-secondary">Amount</th>
+    <th class="small text-secondary">Status</th></tr></thead><tbody>`+
+                orders.map(o => `<tr>
+    <td class="small text-secondary">${o.id?.substring(0, 8)}...</td>
+    <td class="small">${o.users?.email || '—'}</td>
+    <td><span class="badge-section section-${o.razorpay_section || 'course'} px-2 py-1 rounded">${o.razorpay_section || '—'}</span></td>
+    <td class="small fw-semibold">₹${(o.total_amount || 0).toLocaleString()}</td>
+    <td><span class="badge ${o.status === 'paid' ? 'bg-success' : o.status === 'pending' ? 'bg-warning text-dark' : 'bg-secondary'} bg-opacity-20 text-${o.status === 'paid' ? 'success' : o.status === 'pending' ? 'warning' : 'secondary'}">${o.status}</span></td>
+  </tr>`).join('') + '</tbody></table>';
+        }
+
+        async function loadOrders() {
+            const orders = await ShardaDB.getRecentOrders(50);
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = orders.map(o => `<tr>
+    <td class="small text-secondary">${o.id?.substring(0, 12)}...</td>
+    <td class="small">${o.users?.email || '—'}</td>
+    <td><span class="badge-section section-${o.razorpay_section || 'course'} px-2 py-1 rounded small">${o.razorpay_section || '—'}</span></td>
+    <td class="small fw-semibold text-white">₹${(o.total_amount || 0).toLocaleString()}</td>
+    <td><span class="badge ${o.status === 'paid' ? 'bg-success' : o.status === 'pending' ? 'bg-warning text-dark' : 'bg-secondary'} bg-opacity-20 text-capitalize">${o.status}</span></td>
+    <td class="small text-secondary">${new Date(o.created_at).toLocaleString()}</td>
+  </tr>`).join('');
+        }
+
+        async function loadUsers() {
+            const users = await ShardaDB.getRecentUsers(50);
+            document.getElementById('usersTableBody').innerHTML = users.map(u => `<tr>
+    <td class="small fw-medium">${u.full_name || '—'}</td>
+    <td class="small text-secondary">${u.email}</td>
+    <td><span class="badge ${u.role === 'admin' ? 'bg-danger' : 'bg-info'} bg-opacity-15 text-${u.role === 'admin' ? 'danger' : 'info'}">${u.role || 'user'}</span></td>
+    <td class="small text-secondary">${new Date(u.created_at).toLocaleDateString()}</td>
+    <td>
+      <button class="btn btn-sm btn-outline-warning rounded-pill px-2 py-0" onclick="toggleAdmin('${u.id}','${u.role}')">
+        ${u.role === 'admin' ? 'Demote' : 'Make Admin'}
+      </button>
+    </td>
+  </tr>`).join('');
+        }
+
+        async function loadCoupons() {
+            const coupons = await ShardaDB.getCoupons();
+            document.getElementById('couponsTableBody').innerHTML = coupons.length
+                ? coupons.map(c => `<tr>
+      <td class="fw-bold text-info small">${c.code}</td>
+      <td class="small text-secondary">${c.discount_type}</td>
+      <td class="small">${c.discount_type === 'percent' ? c.discount_value + '%' : '₹' + c.discount_value}</td>
+      <td class="small">${c.used_count || 0}/${c.max_uses || '∞'}</td>
+      <td class="small text-secondary">${c.expiry_date ? new Date(c.expiry_date).toLocaleDateString() : 'Never'}</td>
+      <td><span class="badge ${c.is_active ? 'bg-success' : 'bg-secondary'} bg-opacity-15 text-${c.is_active ? 'success' : 'secondary'}">${c.is_active ? 'Active' : 'Inactive'}</span></td>
+      <td>
+        <button class="btn btn-sm btn-outline-${c.is_active ? 'danger' : 'success'} rounded-pill py-0 px-2"
+                onclick="ShardaDB.toggleCoupon('${c.id}',${!c.is_active}).then(loadCoupons)">
+          ${c.is_active ? 'Disable' : 'Enable'}
+        </button>
+      </td>
+    </tr>`).join('')
+                : '<tr><td colspan="7" class="text-center text-secondary py-4">No coupons yet</td></tr>';
+        }
+
+        async function createCoupon() {
+            const code = document.getElementById('couponCode').value.trim().toUpperCase();
+            const type = document.getElementById('couponType').value;
+            const value = parseFloat(document.getElementById('couponValue').value);
+            if (!code || !value) { ShardaPayments.showToast('Fill code and value', 'warning'); return; }
+            const { error } = await ShardaDB.createCoupon({
+                code, discount_type: type, discount_value: value,
+                expiry_date: document.getElementById('couponExpiry').value || null,
+                max_uses: parseInt(document.getElementById('couponLimit').value) || null,
+                is_active: true, used_count: 0
+            });
+            if (!error) { ShardaPayments.showToast('Coupon created!', 'success'); loadCoupons(); }
+            else ShardaPayments.showToast('Error: ' + error.message, 'danger');
+        }
+
+        async function loadRazorpayKeys() {
+            const accounts = await ShardaDB.getRazorpayAccounts();
+            accounts.forEach(a => {
+                const el = document.getElementById('rzp_' + a.section_key + '_key');
+                if (el) el.value = a.key_id;
+            });
+        }
+
+        async function saveRzpKey(section) {
+            const keyId = document.getElementById('rzp_' + section + '_key').value.trim();
+            const label = { 'course': 'ShardaHub Courses', 'ai': 'ShardaHub AI Lab', 'saas': 'ShardaHub SaaS', 'game': 'ShardaHub Games', 'template': 'ShardaHub Templates', 'robotic': 'ShardaHub Robotics' }[section];
+            const { error } = await ShardaDB.upsertRazorpayAccount(section, keyId, label);
+            const statusEl = document.getElementById('rzp_' + section + '_status');
+            if (!error) { statusEl.textContent = '✓ Saved successfully'; statusEl.className = 'small mt-2 text-success'; }
+            else { statusEl.textContent = '✗ Error: ' + error.message; statusEl.className = 'small mt-2 text-danger'; }
+        }
+
+        async function loadInventory() {
+            const inv = await ShardaDB.getAllInventory();
+            document.getElementById('inventoryTableBody').innerHTML = inv.length
+                ? inv.map(i => {
+                    const isLow = i.stock_qty <= i.reorder_level;
+                    return `<tr>
+        <td class="small fw-medium">${i.products?.title || i.product_id}</td>
+        <td class="small text-secondary">${i.sku || '—'}</td>
+        <td class="fw-bold ${i.stock_qty === 0 ? 'text-danger' : isLow ? 'text-warning' : 'text-success'}">${i.stock_qty}</td>
+        <td class="small text-secondary">${i.reserved_qty || 0}</td>
+        <td class="small text-secondary">${i.reorder_level}</td>
+        <td><span class="badge ${i.stock_qty === 0 ? 'bg-danger' : isLow ? 'bg-warning text-dark' : 'bg-success'} bg-opacity-15">${i.stock_qty === 0 ? 'Out of Stock' : isLow ? 'Low Stock' : 'In Stock'}</span></td>
+      </tr>`;
+                }).join('')
+                : '<tr><td colspan="6" class="text-center text-secondary py-4">No inventory data</td></tr>';
+        }
+
+        async function loadSubscriptions() {
+            const { data } = await supabase.from('user_subscriptions').select('*,users(email),products(title,product_type),product_tiers(name)').order('created_at', { ascending: false }).limit(50);
+            const tbody = document.getElementById('subscriptionsTableBody');
+            tbody.innerHTML = (data || []).map(s => `<tr>
+    <td class="small">${s.users?.email || '—'}</td>
+    <td class="small">${s.products?.title || '—'}</td>
+    <td class="small text-info">${s.product_tiers?.name || '—'}</td>
+    <td><span class="badge ${s.status === 'active' ? 'bg-success' : 'bg-secondary'} bg-opacity-15 text-capitalize">${s.status}</span></td>
+    <td class="small text-secondary">${s.expires_at ? new Date(s.expires_at).toLocaleDateString() : 'Lifetime'}</td>
+    <td>
+      ${s.status === 'active' ? `<button class="btn btn-sm btn-outline-danger rounded-pill py-0 px-2"
+        onclick="supabase.from('user_subscriptions').update({status:'cancelled'}).eq('id','${s.id}').then(loadSubscriptions)">Cancel</button>` : '—'}
+    </td>
+  </tr>`).join('');
+        }
+
+        // loadProducts is defined below with full search/filter support
+
+        async function toggleAdmin(userId, currentRole) {
+            const newRole = currentRole === 'admin' ? 'user' : 'admin';
+            await supabase.from('users').update({ role: newRole }).eq('id', userId);
+            ShardaPayments.showToast('Role updated to ' + newRole, 'success');
+            loadUsers();
+        }
+
+        // Load analytics charts
+        function loadAnalytics() {
+            // Placeholder data for user growth
+            const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const userData = [12, 19, 8, 15, 22, 30, 18];
+            const ctx3 = document.getElementById('sectionBarChart').getContext('2d');
+            if (barChartInst) barChartInst.destroy();
+            // reuse revenue data
+            ShardaDB.getRevenueBySection().then(data => {
+                barChartInst = new Chart(ctx3, {
+                    type: 'bar', data: {
+                        labels: Object.keys(data),
+                        datasets: [{ label: 'Revenue', data: Object.values(data), backgroundColor: Object.keys(data).map(k => SECTION_COLORS[k] + '88'), borderColor: Object.keys(data).map(k => SECTION_COLORS[k]), borderWidth: 2, borderRadius: 10 }]
+                    }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,.05)' } }, y: { ticks: { color: '#94a3b8', callback: v => '₹' + v.toLocaleString() }, grid: { color: 'rgba(255,255,255,.05)' } } } }
+                });
+            });
+            const ctx4 = document.getElementById('usersChart').getContext('2d');
+            if (usersChartInst) usersChartInst.destroy();
+            usersChartInst = new Chart(ctx4, { type: 'line', data: { labels, datasets: [{ label: 'New Users', data: userData, fill: true, backgroundColor: 'rgba(14,165,233,.1)', borderColor: '#0ea5e9', tension: .4, pointBackgroundColor: '#0ea5e9' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,.05)' } }, y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,.05)' } } } } });
+        }
+
+        const TAB_LOADERS = { orders: loadOrders, users: loadUsers, coupons: loadCoupons, razorpay: loadRazorpayKeys, inventory: loadInventory, subscriptions: loadSubscriptions, products: loadProducts, analytics: loadAnalytics };
+
+        function showTab(id, btn) {
+            document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            document.querySelectorAll('.nav-item-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            document.getElementById('pageHeading').textContent = { dashboard: 'Dashboard', analytics: 'Analytics', orders: 'Orders', users: 'Users', products: 'Products', coupons: 'Coupons', razorpay: 'Razorpay Keys', inventory: 'Inventory', subscriptions: 'Subscriptions' }[id] || id;
+            if (TAB_LOADERS[id]) TAB_LOADERS[id]();
+        }
+
+        // --- PRODUCT MANAGEMENT ---
+        function toggleCategorySpecifics() {
+            const cat = document.getElementById('prod-category').value;
+            document.querySelectorAll('.category-specific').forEach(el => el.classList.add('d-none'));
+            if (cat === 'course') document.querySelector('.course-only').classList.remove('d-none');
+            if (cat === 'robotic') document.querySelector('.robotic-only').classList.remove('d-none');
+        }
+
+        function openProductModal(prodId = null) {
+            const form = document.getElementById('productForm');
+            if (form) form.reset();
+            document.getElementById('edit-prod-id').value = '';
+            document.getElementById('prod-slug').readOnly = false;
+            document.getElementById('prod-slug').classList.remove('opacity-50');
+            document.getElementById('tiersContainer').innerHTML = '';
+            document.getElementById('productModalTitle').textContent = prodId ? 'Edit Product' : 'Add New Product';
+
+            if (prodId) {
+                loadProductForEdit(prodId);
+            } else {
+                addNewTierRow('Free', 0); // Default free tier
+                toggleCategorySpecifics();
+                new bootstrap.Modal('#productModal').show();
+            }
+        }
+
+        async function loadProductForEdit(id) {
+            const { data: p } = await supabase.from('products').select('*, courses(*), robotic_inventory(*), product_tiers(*)').eq('id', id).single();
+            if (!p) return;
+
+            document.getElementById('edit-prod-id').value = p.id;
+            document.getElementById('prod-slug').value = p.id;
+            document.getElementById('prod-slug').readOnly = true;
+            document.getElementById('prod-slug').classList.add('opacity-50');
+            document.getElementById('prod-title').value = p.title;
+            document.getElementById('prod-category').value = p.product_type || 'course';
+            document.getElementById('prod-tagline').value = p.tagline || '';
+            document.getElementById('prod-desc').value = p.description || '';
+            document.getElementById('prod-video').value = p.video_url || '';
+            document.getElementById('prod-subcategory').value = p.category || '';
+            document.getElementById('prod-active').checked = p.is_active !== false;
+
+            if (p.courses) {
+                document.getElementById('course-instructor').value = p.courses.instructor_name || '';
+                document.getElementById('course-level').value = p.courses.level || 'Beginner';
+                document.getElementById('course-duration').value = p.courses.duration_hours || 0;
+            }
+
+            if (p.robotic_inventory) {
+                document.getElementById('robot-stock').value = p.robotic_inventory.stock_qty || 0;
+                document.getElementById('robot-reorder').value = p.robotic_inventory.reorder_level || 5;
+                document.getElementById('robot-sku').value = p.robotic_inventory.sku || '';
+            }
+
+            // Load Tiers
+            const container = document.getElementById('tiersContainer');
+            container.innerHTML = '';
+            if (p.product_tiers && p.product_tiers.length > 0) {
+                p.product_tiers.sort((a, b) => a.price_inr - b.price_inr).forEach(t => addNewTierRow(t.name, t.price_inr, t.action_url, t.id));
+            } else {
+                addNewTierRow('Standard', p.price_inr);
+            }
+
+            // Load Metadata
+            if (p.meta_data) {
+                document.getElementById('prod-impact').value = (p.meta_data.business_impact || []).join('\n');
+                document.getElementById('prod-requirements').value = (p.meta_data.requirements || []).join('\n');
+                const workflowContainer = document.getElementById('workflow-steps-container');
+                workflowContainer.innerHTML = '';
+                if (p.meta_data.workflow) {
+                    p.meta_data.workflow.forEach(w => addWorkflowStepRow(w.title, w.desc));
+                }
+            } else {
+                const workflowContainer = document.getElementById('workflow-steps-container');
+                workflowContainer.innerHTML = '';
+                addWorkflowStepRow('Initialize', 'Set up your expert environment.');
+            }
+
+            toggleCategorySpecifics();
+            new bootstrap.Modal('#productModal').show();
+        }
+
+        function addWorkflowStepRow(title = '', desc = '') {
+            const container = document.getElementById('workflow-steps-container');
+            const row = document.createElement('div');
+            row.className = 'd-flex gap-2 workflow-step-row';
+            row.innerHTML = `
+                <input type="text" class="form-control-dark flex-grow-1 wf-title" placeholder="Step Title" value="${title}">
+                <input type="text" class="form-control-dark flex-grow-1 wf-desc" placeholder="Brief desc" value="${desc}">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.parentElement.remove()">&times;</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function addNewTierRow(name = '', price = 0, url = '', id = '') {
+            const container = document.getElementById('tiersContainer');
+            const row = document.createElement('div');
+            row.className = 'glass p-3 rounded-3 border border-white border-opacity-10 tier-row';
+            row.dataset.id = id;
+            row.innerHTML = `
+                <div class="row g-2">
+                    <div class="col-7"><input type="text" class="form-control-dark w-100 tier-name" placeholder="Tier Name" value="${name}"></div>
+                    <div class="col-5"><input type="number" class="form-control-dark w-100 tier-price" placeholder="Price (₹)" value="${price}"></div>
+                    <div class="col-10"><input type="text" class="form-control-dark w-100 tier-url" placeholder="Action URL / Dashboard Link" value="${url}"></div>
+                    <div class="col-2 d-flex align-items-end"><button type="button" class="btn btn-sm btn-outline-danger w-100" onclick="this.closest('.tier-row').remove()"><i class="bi bi-trash"></i></button></div>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        async function saveFullProduct() {
+            const btn = event.target;
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+
+            const id = document.getElementById('edit-prod-id').value || document.getElementById('prod-slug').value.trim();
+            if (!id) { alert('Slug is required'); btn.innerHTML = originalContent; btn.disabled = false; return; }
+
+            const type = document.getElementById('prod-category').value;
+            const pData = {
+                id,
+                title: document.getElementById('prod-title').value,
+                product_type: type,
+                razorpay_section: type === 'robotic' ? 'robotic' : type,
+                tagline: document.getElementById('prod-tagline').value,
+                description: document.getElementById('prod-desc').value,
+                image_url: document.getElementById('prod-image').value,
+                video_url: document.getElementById('prod-video').value,
+                category: document.getElementById('prod-subcategory').value.toLowerCase().trim(),
+                is_active: document.getElementById('prod-active').checked,
+                price_inr: 0,
+                meta_data: {
+                    business_impact: document.getElementById('prod-impact').value.split('\n').filter(l => l.trim()),
+                    requirements: document.getElementById('prod-requirements').value.split('\n').filter(l => l.trim()),
+                    workflow: Array.from(document.querySelectorAll('.workflow-step-row')).map((row, idx) => ({
+                        step: idx + 1,
+                        title: row.querySelector('.wf-title').value,
+                        desc: row.querySelector('.wf-desc').value
+                    }))
+                }
+            };
+
+            // Calculate min price from tiers
+            const tierRows = document.querySelectorAll('.tier-row');
+            let minPrice = 999999;
+            tierRows.forEach(row => {
+                const p = parseFloat(row.querySelector('.tier-price').value) || 0;
+                if (p < minPrice) minPrice = p;
+            });
+            pData.price_inr = minPrice === 999999 ? 0 : minPrice;
+
+            try {
+                // 1. Upsert Product
+                const { error: pErr } = await supabase.from('products').upsert([pData]);
+                if (pErr) throw pErr;
+
+                // 2. Category Specifics
+                if (type === 'course') {
+                    await supabase.from('courses').upsert([{
+                        id,
+                        instructor_name: document.getElementById('course-instructor').value,
+                        level: document.getElementById('course-level').value,
+                        duration_hours: parseFloat(document.getElementById('course-duration').value) || 0
+                    }]);
+                }
+                if (type === 'robotic') {
+                    await supabase.from('robotic_inventory').upsert([{
+                        product_id: id,
+                        stock_qty: parseInt(document.getElementById('robot-stock').value) || 0,
+                        reorder_level: parseInt(document.getElementById('robot-reorder').value) || 5,
+                        sku: document.getElementById('robot-sku').value
+                    }]);
+                }
+
+                // 3. Tiers (Delete existing and re-add or smart sync)
+                // For simplicity: delete and re-insert
+                await supabase.from('product_tiers').delete().eq('product_id', id);
+                const tiersToInsert = Array.from(tierRows).map(row => ({
+                    product_id: id,
+                    name: row.querySelector('.tier-name').value,
+                    price_inr: parseFloat(row.querySelector('.tier-price').value) || 0,
+                    action_url: row.querySelector('.tier-url').value,
+                    features: []
+                }));
+                if (tiersToInsert.length) {
+                    await supabase.from('product_tiers').insert(tiersToInsert);
+                }
+
+                ShardaPayments.showToast('Product and Tiers saved successfully!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+                loadProducts();
+            } catch (err) {
+                console.error(err);
+                alert('Save failed: ' + err.message);
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Are you sure you want to delete this product? This will remove all associated tiers, courses, and inventory records.')) return;
+            const { error } = await supabase.from('products').delete().eq('id', id);
+            if (!error) {
+                ShardaPayments.showToast('Product deleted.', 'info');
+                loadProducts();
+            } else {
+                alert('Delete failed: ' + error.message);
+            }
+        }
+
+        // Defining the master loadProducts function with search & filter support
+        async function loadProducts() {
+            const filter = document.getElementById('productTypeFilter')?.value;
+            const search = document.getElementById('productSearch')?.value?.toLowerCase();
+
+            let query = supabase.from('products').select('*').order('created_at', { ascending: false });
+            if (filter) query = query.eq('product_type', filter);
+
+            const { data: products } = await query;
+            const tbody = document.getElementById('productsTableBody');
+
+            if (!products || products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-secondary">No products found.</td></tr>';
+                return;
+            }
+
+            const filtered = search
+                ? products.filter(p => p.title.toLowerCase().includes(search) || p.id.toLowerCase().includes(search))
+                : products;
+
+            tbody.innerHTML = filtered.map(p => `
+                <tr class="align-middle">
+                    <td class="small text-secondary fw-mono">${p.id.substring(0, 6)}..</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="${sanitizeImg(p.image_url)}" class="rounded-2 me-3" style="width:40px;height:40px;object-fit:cover" onerror="this.onerror=null; this.src=window.SHARDA_PLACEHOLDER;">
+                            <div>
+                                <div class="fw-bold">${p.title}</div>
+                                <div class="smaller text-secondary text-truncate" style="max-width:200px">${p.tagline || 'No tagline'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge-section section-${p.product_type} px-2 py-1 rounded small text-uppercase">${p.product_type}</span>
+                        ${p.category ? `<br><span class="smaller text-secondary">${p.category}</span>` : ''}
+                    </td>
+                    <td class="fw-bold text-white">₹${p.price_inr.toLocaleString()}</td>
+                    <td><span class="badge ${p.is_active ? 'bg-success' : 'bg-secondary'} bg-opacity-15">${p.is_active ? 'Active' : 'Hidden'}</span></td>
+                    <td class="text-end">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="openProductModal('${p.id}')">
+                                <i class="bi bi-pencil-square me-1"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="deleteProduct('${p.id}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>
