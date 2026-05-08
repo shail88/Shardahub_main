@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robotics Store — ShardaHub</title>
+    <meta name="description"
+        content="Buy robotics kits, DIY components and STEM products. Amazon-style checkout with express delivery.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060b14;
+            color: #e2e8f0
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            backdrop-filter: blur(12px)
+        }
+
+        .product-card {
+            transition: all .3s;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(14, 165, 233, .2)
+        }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #0f172a
+        }
+
+        .btn-orange {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border: none;
+            color: #fff
+        }
+
+        .btn-orange:hover {
+            opacity: .9;
+            color: #fff
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            color: #fff
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff
+        }
+
+        .rating-stars {
+            color: #f59e0b;
+            font-size: .8rem
+        }
+
+        .hero-bg {
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(14, 165, 233, .1) 0%, transparent 70%)
+        }
+
+        .cart-badge {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000
+        }
+
+        .shipping-tag {
+            font-size: .7rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            background: rgba(16, 185, 129, .15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, .3)
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .12);
+            color: #fff;
+            border-radius: 12px;
+            padding: 10px 20px
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, .15)
+        }
+
+        .filter-pill {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 50px;
+            padding: 5px 14px;
+            cursor: pointer;
+            font-size: .82rem;
+            transition: all .2s
+        }
+
+        .filter-pill:hover,
+        .filter-pill.active {
+            background: rgba(14, 165, 233, .2);
+            border-color: #0ea5e9;
+            color: #0ea5e9
+        }
+
+        .stock-ok {
+            color: #10b981
+        }
+
+        .stock-low {
+            color: #f59e0b
+        }
+
+        .stock-out {
+            color: #ef4444
+        }
+    </style>
+</head>
+
+<body>
+    <div id="headerPlaceholder"></div>
+
+    <!-- Hero -->
+    <section class="hero-bg py-4">
+        <div class="container py-2 text-center">
+            <span class="badge rounded-pill px-3 py-2 mb-3"
+                style="background:rgba(14,165,233,.15);color:#0ea5e9;border:1px solid rgba(14,165,233,.3)">
+                <i class="bi bi-cpu me-1"></i>Robotics & STEM
+            </span>
+            <h1 class="display-5 fw-bold mb-2">Build the <span style="color:#0ea5e9">Future</span></h1>
+            <p class="text-secondary lead">DIY kits, sensors, controllers & STEM educational robotics</p>
+        </div>
+    </section>
+
+    <!-- Search & Filter Bar -->
+    <section class="py-3 border-bottom border-secondary border-opacity-25 sticky-top"
+        style="background:#060b14ee;backdrop-filter:blur(12px);z-index:100">
+        <div class="container">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-5">
+                    <div class="position-relative">
+                        <i
+                            class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
+                        <input id="searchInput" type="text" class="search-input w-100 ps-5"
+                            placeholder="Search products...">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="filter-pill active" data-cat="all">All</span>
+                        <span class="filter-pill" data-cat="kits">🔧 Starter Kits</span>
+                        <span class="filter-pill" data-cat="sensors">📡 Sensors</span>
+                        <span class="filter-pill" data-cat="controllers">🎮 Controllers</span>
+                        <span class="filter-pill" data-cat="accessories">🔩 Accessories</span>
+                        <a href="orders.html" class="btn btn-sm btn-outline-info rounded-pill px-3 ms-auto">
+                            <i class="bi bi-bag me-1"></i>Orders
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="py-5">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+                <h5 class="fw-bold mb-0">
+                    <span id="productCount">—</span> Products
+                </h5>
+                <select id="sortFilter" class="search-input py-1 px-3 small" style="width:auto">
+                    <option>Sort: Featured</option>
+                    <option value="popular">Most Popular</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="rating">Best Rated</option>
+                </select>
+            </div>
+            <div class="row g-4" id="productGrid">
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-info" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Cart Button -->
+    <div class="cart-badge">
+        <button class="btn btn-orange rounded-pill px-4 py-2 fw-bold shadow-lg" id="cartFloatBtn"
+            onclick="openCartModal()" style="display:none">
+            <i class="bi bi-cart3 me-2"></i>Cart (<span id="cartCount">0</span>)
+            — ₹<span id="cartTotal">0</span>
+        </button>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-end modal-lg">
+            <div class="modal-content glass border border-secondary border-opacity-25 rounded-4">
+                <div class="modal-header border-0 px-4 py-3">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-cart3 text-info me-2"></i>Your Cart</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-4 py-0" id="cartBody">
+                    <p class="text-secondary text-center py-4">Cart is empty</p>
+                </div>
+                <div class="modal-footer border-0 px-4 py-3 d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-secondary small">Total</div>
+                        <div class="fw-bold fs-5 text-white">₹<span id="cartModalTotal">0</span></div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Continue
+                            Shopping</button>
+                        <button class="btn btn-orange rounded-pill px-4 fw-bold" onclick="proceedToCheckout()">
+                            Checkout <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footerPlaceholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/footer.js"></script>
+    <script src="../assets/js/sharda-access.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="../assets/js/payments.js"></script>
+    <script>
+        window.ShardaBaseUrl = '../';
+        let allProducts = [];
+        let robotCart = JSON.parse(localStorage.getItem('sharda_robotic_cart') || '[]');
+        let activeCat = 'all';
+
+        const FALLBACK_PRODUCTS = [
+            { id: 'rob-starter-01', title: 'Arduino Starter Kit', category: 'kits', price_inr: 1499, og_price: 2499, stock_qty: 23, rating: 4.8, rating_count: 234, image_url: window.SHARDA_PLACEHOLDER, tags: ['Arduino', 'Beginner'], shipping: 'Free Delivery' },
+            { id: 'rob-kit-02', title: 'Raspberry Pi 4 Kit', category: 'kits', price_inr: 4999, og_price: 6999, stock_qty: 8, rating: 4.9, rating_count: 512, image_url: window.SHARDA_PLACEHOLDER, tags: ['Raspberry Pi', 'Advanced'], shipping: 'Free Delivery' },
+            { id: 'rob-sensor-01', title: 'Ultrasonic Sensor Pack (5x)', category: 'sensors', price_inr: 399, og_price: 699, stock_qty: 85, rating: 4.5, rating_count: 89, image_url: window.SHARDA_PLACEHOLDER, tags: ['HC-SR04'], shipping: 'Free above ₹500' },
+            { id: 'rob-sensor-02', title: 'MPU-6050 IMU Module', category: 'sensors', price_inr: 299, og_price: 499, stock_qty: 3, rating: 4.7, rating_count: 143, image_url: window.SHARDA_PLACEHOLDER, tags: ['Gyroscope', 'Accelerometer'], shipping: 'Free above ₹500' },
+            { id: 'rob-ctrl-01', title: 'ESP32 Dev Board', category: 'controllers', price_inr: 599, og_price: 999, stock_qty: 0, rating: 4.9, rating_count: 678, image_url: window.SHARDA_PLACEHOLDER, tags: ['WiFi', 'Bluetooth'], shipping: 'Free Delivery' },
+            { id: 'rob-acc-01', title: 'Servo Motor Pack (10x)', category: 'accessories', price_inr: 799, og_price: 1399, stock_qty: 34, rating: 4.4, rating_count: 56, image_url: window.SHARDA_PLACEHOLDER, tags: ['MG996R'], shipping: 'Free Delivery' },
+        ];
+
+        async function init() {
+            const { data } = await supabase.from('products').select('*,robotic_inventory(stock_qty)').eq('product_type', 'robotic').eq('is_active', true);
+            allProducts = (data && data.length) ? data.map(p => ({ ...p, stock_qty: p.robotic_inventory?.stock_qty ?? 10 })) : FALLBACK_PRODUCTS;
+            render();
+            updateCartUI();
+        }
+
+        function render() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const sort = document.getElementById('sortFilter').value;
+            let filtered = allProducts.filter(p => {
+                const matchCat = activeCat === 'all' || p.category === activeCat;
+                const matchQ = !q || p.title.toLowerCase().includes(q);
+                return matchCat && matchQ;
+            });
+            if (sort === 'popular') filtered.sort((a, b) => (b.rating_count || 0) - (a.rating_count || 0));
+            if (sort === 'price_asc') filtered.sort((a, b) => (a.price_inr || 0) - (b.price_inr || 0));
+            if (sort === 'price_desc') filtered.sort((a, b) => (b.price_inr || 0) - (a.price_inr || 0));
+            if (sort === 'rating') filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+
+            document.getElementById('productCount').textContent = filtered.length;
+            const grid = document.getElementById('productGrid');
+            if (!filtered.length) { grid.innerHTML = '<div class="col-12 text-center text-secondary py-5">No products found</div>'; return; }
+
+            grid.innerHTML = filtered.map(p => {
+                const inCart = robotCart.some(c => c.id === p.id);
+                const stockClass = p.stock_qty === 0 ? 'stock-out' : p.stock_qty < 5 ? 'stock-low' : 'stock-ok';
+                const stockLabel = p.stock_qty === 0 ? 'Out of Stock' : p.stock_qty < 5 ? `Only ${p.stock_qty} left!` : `${p.stock_qty} in stock`;
+                const stars = Math.round(p.rating || 4);
+                return `
+    <div class="col-sm-6 col-lg-4 col-xl-3">
+      <div class="glass product-card h-100 d-flex flex-column">
+        <div class="position-relative overflow-hidden" onclick="window.location.href='product.html?id=${p.id}'">
+          <img src="${sanitizeImg(p.image_url)}"
+               class="product-img" alt="${p.title}"
+               onerror="this.onerror=null; this.src=window.SHARDA_PLACEHOLDER;">
+          ${p.og_price ? `<div class="position-absolute top-0 start-0 m-2">
+            <span class="badge bg-danger">-${Math.round((1 - p.price_inr / p.og_price) * 100)}%</span>
+          </div>`: ''}
+        </div>
+        <div class="p-3 flex-grow-1 d-flex flex-column">
+          <div class="d-flex gap-1 flex-wrap mb-1">
+            ${(p.tags || []).map(t => `<span class="badge bg-secondary bg-opacity-20 text-secondary" style="font-size:.65rem">${t}</span>`).join('')}
+          </div>
+          <h6 class="fw-semibold mb-1 lh-sm" onclick="window.location.href='product.html?id=${p.id}'">${p.title}</h6>
+          <div class="rating-stars mb-1">
+            ${'★'.repeat(stars) + '☆'.repeat(5 - stars)}
+            <span class="text-secondary small">(${p.rating_count || 0})</span>
+          </div>
+          <div class="${stockClass} small mb-2">${stockLabel}</div>
+          ${p.shipping ? `<span class="shipping-tag mb-2 d-inline-block"><i class="bi bi-truck me-1"></i>${p.shipping}</span>` : ''}
+          <div class="mt-auto">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="fw-bold text-white fs-5">₹${(p.price_inr || 0).toLocaleString()}</span>
+              ${p.og_price ? `<span class="text-secondary text-decoration-line-through small">₹${p.og_price?.toLocaleString()}</span>` : ''}
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm ${inCart ? 'btn-success' : 'btn-outline-info'} rounded-pill flex-grow-1 fw-semibold"
+                      ${p.stock_qty === 0 ? 'disabled' : ''}
+                      onclick="addToRoboticCart('${p.id}','${p.title}',${p.price_inr || 0},'${p.image_url || ''}')">
+                ${p.stock_qty === 0 ? 'Out of Stock' : inCart ? '<i class="bi bi-check-circle me-1"></i>Added' : '<i class="bi bi-cart-plus me-1"></i>Add to Cart'}
+              </button>
+              <button class="btn btn-sm btn-orange rounded-pill px-3 fw-semibold"
+                      ${p.stock_qty === 0 ? 'disabled' : ''}
+                      onclick="buyNow('${p.id}','${p.title}',${p.price_inr || 0})">
+                Buy
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+            }).join('');
+        }
+
+        function addToRoboticCart(id, title, price, imageUrl) {
+            const existing = robotCart.find(c => c.id === id);
+            if (existing) { existing.qty = (existing.qty || 1) + 1; }
+            else robotCart.push({ id, title, price, imageUrl, qty: 1 });
+            localStorage.setItem('sharda_robotic_cart', JSON.stringify(robotCart));
+            updateCartUI();
+            render();
+        }
+
+        function removeFromCart(id) {
+            robotCart = robotCart.filter(c => c.id !== id);
+            localStorage.setItem('sharda_robotic_cart', JSON.stringify(robotCart));
+            updateCartUI();
+            renderCartBody();
+        }
+
+        function updateQty(id, delta) {
+            const item = robotCart.find(c => c.id === id);
+            if (item) {
+                item.qty = Math.max(1, item.qty + delta);
+                if (item.qty < 1) robotCart = robotCart.filter(c => c.id !== id);
+                localStorage.setItem('sharda_robotic_cart', JSON.stringify(robotCart));
+                updateCartUI();
+                renderCartBody();
+            }
+        }
+
+        function updateCartUI() {
+            const count = robotCart.reduce((a, c) => a + (c.qty || 1), 0);
+            const total = robotCart.reduce((a, c) => a + (c.price * (c.qty || 1)), 0);
+            document.getElementById('cartCount').textContent = count;
+            document.getElementById('cartTotal').textContent = total.toLocaleString();
+            document.getElementById('cartModalTotal').textContent = total.toLocaleString();
+            document.getElementById('cartFloatBtn').style.display = count > 0 ? 'block' : 'none';
+        }
+
+        function renderCartBody() {
+            const body = document.getElementById('cartBody');
+            if (!robotCart.length) { body.innerHTML = '<p class="text-secondary text-center py-5">Cart is empty</p>'; return; }
+            body.innerHTML = `<div class="py-2">` + robotCart.map(item => `
+  <div class="d-flex align-items-center gap-3 py-3 border-bottom border-secondary border-opacity-25">
+    <img src="${sanitizeImg(item.imageUrl)}" class="rounded-3" width="60" height="60" style="object-fit:cover" alt="" onerror="this.onerror=null; this.src=window.SHARDA_PLACEHOLDER;">
+    <div class="flex-grow-1">
+      <div class="fw-semibold small mb-1">${item.title}</div>
+      <div class="fw-bold text-info">₹${(item.price * (item.qty || 1)).toLocaleString()}</div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-sm btn-outline-secondary rounded-circle px-2 py-0" onclick="updateQty('${item.id}',-1)">−</button>
+      <span class="fw-bold">${item.qty || 1}</span>
+      <button class="btn btn-sm btn-outline-secondary rounded-circle px-2 py-0" onclick="updateQty('${item.id}',1)">+</button>
+      <button class="btn btn-sm btn-outline-danger rounded-circle px-2 py-0 ms-1" onclick="removeFromCart('${item.id}')">
+        <i class="bi bi-trash3" style="font-size:.7rem"></i>
+      </button>
+    </div>
+  </div>`).join('') + '</div>';
+        }
+
+        function openCartModal() {
+            renderCartBody();
+            new bootstrap.Modal(document.getElementById('cartModal')).show();
+        }
+
+        async function proceedToCheckout() {
+            const user = window.SubpassAuth?.user;
+            if (!user) { window.location.href = '../login.html?redirect=' + encodeURIComponent(location.href); return; }
+            if (!robotCart.length) { ShardaPayments.showToast('Cart is empty', 'warning'); return; }
+            // Pass cart to checkout page via localStorage
+            localStorage.setItem('sharda_robotic_checkout', JSON.stringify(robotCart));
+            window.location.href = 'checkout.html';
+        }
+
+        async function buyNow(id, title, price) {
+            const user = window.SubpassAuth?.user;
+            if (!user) { window.location.href = '../login.html'; return; }
+            robotCart = [{ id, title, price, qty: 1 }];
+            localStorage.setItem('sharda_robotic_cart', JSON.stringify(robotCart));
+            localStorage.setItem('sharda_robotic_checkout', JSON.stringify(robotCart));
+            window.location.href = 'checkout.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new Promise(r => { if (window.SubpassAuth?.ready) window.SubpassAuth.ready.then(r); else setTimeout(r, 800); }).then(init);
+        });
+        document.addEventListener('click', e => {
+            if (e.target.matches('.filter-pill')) {
+                document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                e.target.classList.add('active');
+                activeCat = e.target.dataset.cat; render();
+            }
+        });
+        document.addEventListener('input', e => { if (e.target.id === 'searchInput') render(); });
+        document.addEventListener('change', e => { if (e.target.id === 'sortFilter') render(); });
+    </script>
+</body>
+
+</html>

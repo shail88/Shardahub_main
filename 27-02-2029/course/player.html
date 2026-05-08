@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Course Player — ShardaHub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ai-accent: #0ea5e9;
+            --gold: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060b14;
+            color: #e2e8f0;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .lesson-item {
+            cursor: pointer;
+            transition: background .2s;
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        .lesson-item:hover {
+            background: rgba(14, 165, 233, .1);
+        }
+
+        .lesson-item.active {
+            background: rgba(14, 165, 233, .15);
+            border-left: 3px solid var(--ai-accent);
+        }
+
+        .lesson-item.completed .lesson-icon {
+            color: #10b981;
+        }
+
+        .sidebar {
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+            position: sticky;
+            top: 60px;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .1);
+            border-radius: 4px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-top: 56.25%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .video-container iframe,
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .progress-bar-top {
+            height: 3px;
+            background: linear-gradient(90deg, #0ea5e9, #6366f1);
+            transition: width .5s;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            color: #fff;
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff;
+        }
+
+        .section-header {
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 10px;
+            padding: 12px 16px;
+            cursor: pointer;
+        }
+
+        .course-completion {
+            background: linear-gradient(135deg, rgba(16, 185, 129, .1), rgba(14, 165, 233, .1));
+            border: 1px solid rgba(16, 185, 129, .3);
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                height: auto;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="headerPlaceholder"></div>
+
+    <!-- Top Progress Bar -->
+    <div
+        style="background:#0f172a;height:60px;display:flex;align-items:center;position:sticky;top:0;z-index:200;border-bottom:1px solid rgba(255,255,255,.08)">
+        <div class="container-fluid px-4 d-flex align-items-center gap-3">
+            <a href="index.html" class="text-secondary text-decoration-none small">
+                <i class="bi bi-arrow-left me-1"></i>Courses
+            </a>
+            <div class="flex-grow-1 mx-3">
+                <div style="background:rgba(255,255,255,.1);border-radius:4px;height:4px">
+                    <div id="topProgress" class="progress-bar-top" style="width:0%"></div>
+                </div>
+            </div>
+            <span id="progressLabel" class="small text-secondary fw-medium">0% complete</span>
+            <button id="certBtn" class="btn btn-sm btn-outline-success rounded-pill d-none px-3">
+                <i class="bi bi-award me-1"></i>Get Certificate
+            </button>
+        </div>
+    </div>
+
+    <div class="container-fluid px-0">
+        <div class="row g-0" style="min-height:calc(100vh - 60px)">
+
+            <!-- Video + Content (Left) -->
+            <div class="col-lg-8 col-xl-9 p-4">
+                <!-- Video Player -->
+                <div id="videoContainer" class="video-container mb-4">
+                    <div id="videoPlaceholder"
+                        class="d-flex align-items-center justify-content-center h-100 w-100 position-absolute top-0">
+                        <div class="text-center">
+                            <div class="spinner-border text-info mb-3" role="status"></div>
+                            <div class="small text-secondary">Loading lesson...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson Info -->
+                <div class="d-flex align-items-start justify-content-between mb-3 flex-wrap gap-3">
+                    <div>
+                        <h4 id="lessonTitle" class="fw-bold mb-1">Loading...</h4>
+                        <div id="lessonMeta" class="small text-secondary"></div>
+                    </div>
+                    <button id="markCompleteBtn" class="btn btn-gradient rounded-pill px-4 fw-semibold"
+                        onclick="markCurrentComplete()">
+                        <i class="bi bi-check2-circle me-1"></i>Mark Complete
+                    </button>
+                </div>
+
+                <!-- Description -->
+                <div id="lessonDescription" class="glass rounded-3 p-3 mb-4 text-secondary small d-none"></div>
+
+                <!-- Prev / Next Navigation -->
+                <div class="d-flex gap-3 mb-4">
+                    <button id="prevBtn" class="btn btn-outline-secondary rounded-pill px-4"
+                        onclick="navigateLesson(-1)">
+                        <i class="bi bi-skip-backward me-1"></i>Previous
+                    </button>
+                    <button id="nextBtn" class="btn btn-outline-info rounded-pill px-4 ms-auto"
+                        onclick="navigateLesson(1)">
+                        Next<i class="bi bi-skip-forward ms-1"></i>
+                    </button>
+                </div>
+
+                <!-- Certificate Banner (shown at 100%) -->
+                <div id="certBanner" class="course-completion rounded-4 p-4 text-center d-none mb-4">
+                    <div class="display-5 mb-2">🎓</div>
+                    <h5 class="fw-bold text-success">Congratulations! Course Complete!</h5>
+                    <p class="text-secondary mb-3">You've completed all lessons. Claim your certificate now.</p>
+                    <button class="btn btn-gradient rounded-pill px-5 fw-bold" onclick="claimCertificate()">
+                        <i class="bi bi-award me-1"></i>Download Certificate
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar Curriculum (Right) -->
+            <div class="col-lg-4 col-xl-3 border-start border-secondary border-opacity-25">
+                <div class="sidebar p-3">
+                    <h6 class="fw-bold text-white mb-3 px-1">
+                        <i class="bi bi-collection-play text-info me-2"></i>Course Content
+                    </h6>
+                    <div id="curriculumSidebar">
+                        <div class="text-center py-4 text-secondary">
+                            <div class="spinner-border spinner-border-sm text-info" role="status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/sharda-db.js"></script>
+    <script src="../assets/js/sharda-access.js"></script>
+    <script>
+        window.ShardaBaseUrl = '../';
+
+        const params = new URLSearchParams(location.search);
+        const courseId = params.get('course');
+        const lessonId = params.get('lesson');
+
+        let currentUser = null;
+        let curriculum = [];  // [{...module, lessons:[...]}]
+        let lessonList = [];  // flat list for navigation
+        let progress = {}; // {lessonId: true/false}
+        let currentIndex = 0;
+
+        async function init() {
+            if (!courseId) { window.location.href = 'index.html'; return; }
+
+            // Auth check
+            await new Promise(r => {
+                if (window.SubpassAuth?.ready) window.SubpassAuth.ready.then(r);
+                else setTimeout(r, 800);
+            });
+            currentUser = window.SubpassAuth?.user;
+
+            if (!currentUser) {
+                window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`;
+                return;
+            }
+
+            // Access check
+            const access = await ShardaAccess.checkCourse(currentUser.id, courseId);
+            if (!access.allowed) {
+                ShardaAccess.showUpgradePrompt(access.reason, 'course');
+                setTimeout(() => window.location.href = 'index.html', 3000);
+                return;
+            }
+
+            // Load curriculum
+            curriculum = await ShardaDB.getCourseCurriculum(courseId);
+            lessonList = curriculum.flatMap(m => m.lessons || []);
+
+            // Load progress
+            const rawProgress = await ShardaDB.getLessonProgress(currentUser.id, courseId);
+            rawProgress.forEach(p => { progress[p.lesson_id] = p.is_completed; });
+
+            // Set title
+            const { data: course } = await supabase.from('products').select('title').eq('id', courseId).single();
+            if (course) document.getElementById('pageTitle').textContent = course.title + ' — ShardaHub';
+
+            renderCurriculum();
+            updateProgressBar();
+
+            // Load lesson from URL param or resume last
+            const targetId = lessonId || findLastLesson();
+            if (targetId) {
+                const idx = lessonList.findIndex(l => l.id === targetId);
+                if (idx !== -1) loadLesson(idx);
+                else if (lessonList.length) loadLesson(0);
+            } else if (lessonList.length) {
+                loadLesson(0);
+            }
+        }
+
+        function findLastLesson() {
+            // Find last completed lesson (resume from next)
+            const completedIds = Object.keys(progress).filter(id => progress[id]);
+            if (!completedIds.length) return null;
+            const lastCompleted = lessonList.findIndex(l => l.id === completedIds[completedIds.length - 1]);
+            return lessonList[lastCompleted + 1]?.id || null;
+        }
+
+        function loadLesson(index) {
+            if (index < 0 || index >= lessonList.length) return;
+            currentIndex = index;
+            const lesson = lessonList[index];
+
+            // Update URL without reload
+            const newUrl = `${location.pathname}?course=${courseId}&lesson=${lesson.id}`;
+            history.replaceState({}, '', newUrl);
+
+            // Title & meta
+            document.getElementById('lessonTitle').textContent = lesson.title;
+            document.getElementById('lessonMeta').innerHTML = `
+    <i class="bi bi-clock me-1"></i>${lesson.duration_mins || 5} min
+    <span class="mx-2">·</span>
+    ${lesson.content_type === 'video' ? '<i class="bi bi-play-circle me-1"></i>Video' :
+                    lesson.content_type === 'article' ? '<i class="bi bi-file-text me-1"></i>Article' :
+                        '<i class="bi bi-card-checklist me-1"></i>Quiz'}`;
+
+            if (lesson.description) {
+                document.getElementById('lessonDescription').textContent = lesson.description;
+                document.getElementById('lessonDescription').classList.remove('d-none');
+            } else {
+                document.getElementById('lessonDescription').classList.add('d-none');
+            }
+
+            // Video
+            const container = document.getElementById('videoContainer');
+            document.getElementById('videoPlaceholder')?.remove();
+
+            // Remove old media
+            container.querySelectorAll('iframe,video').forEach(el => el.remove());
+
+            if (lesson.content_url) {
+                const embed = getEmbedUrl(lesson.content_url);
+                if (embed.type === 'iframe') {
+                    const iframe = document.createElement('iframe');
+                    iframe.src = embed.url;
+                    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                    iframe.allowFullscreen = true;
+                    container.appendChild(iframe);
+                } else {
+                    const video = document.createElement('video');
+                    video.src = lesson.content_url;
+                    video.controls = true;
+                    video.style = 'position:absolute;top:0;left:0;width:100%;height:100%';
+                    container.appendChild(video);
+                }
+            } else {
+                container.innerHTML = `<div class="d-flex align-items-center justify-content-center h-100 position-absolute top-0 w-100">
+      <div class="text-center text-secondary">
+        <i class="bi bi-camera-video-off-fill display-4 mb-3 d-block"></i>
+        <p>No video for this lesson.</p>
+      </div>
+    </div>`;
+            }
+
+            // Update complete button
+            const btn = document.getElementById('markCompleteBtn');
+            if (progress[lesson.id]) {
+                btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Completed ✓';
+                btn.classList.add('btn-success');
+                btn.classList.remove('btn-gradient');
+            } else {
+                btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Mark Complete';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-gradient');
+            }
+
+            // Nav buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === lessonList.length - 1;
+
+            // Highlight in sidebar
+            document.querySelectorAll('.lesson-item').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+
+            // Scroll sidebar item into view
+            document.querySelectorAll('.lesson-item')[index]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function getEmbedUrl(url) {
+            const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
+            if (ytMatch) return { type: 'iframe', url: `https://www.youtube.com/embed/${ytMatch[1]}?rel=0` };
+
+            const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+            if (vimeoMatch) return { type: 'iframe', url: `https://player.vimeo.com/video/${vimeoMatch[1]}` };
+
+            if (url.includes('drive.google.com')) {
+                const id = url.match(/\/d\/([^/]+)\//)?.[1];
+                if (id) return { type: 'iframe', url: `https://drive.google.com/file/d/${id}/preview` };
+            }
+
+            return { type: 'video', url };
+        }
+
+        async function markCurrentComplete() {
+            const lesson = lessonList[currentIndex];
+            if (!lesson || !currentUser) return;
+
+            await ShardaDB.updateLessonProgress(currentUser.id, lesson.id, true);
+            progress[lesson.id] = true;
+
+            // Update button
+            const btn = document.getElementById('markCompleteBtn');
+            btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Completed ✓';
+            btn.classList.add('btn-success');
+            btn.classList.remove('btn-gradient');
+
+            updateProgressBar();
+            renderCurriculum();
+
+            // Auto-advance after 1.5s
+            setTimeout(() => {
+                if (currentIndex < lessonList.length - 1) navigateLesson(1);
+            }, 1500);
+        }
+
+        function navigateLesson(dir) {
+            loadLesson(currentIndex + dir);
+        }
+
+        function updateProgressBar() {
+            const completed = lessonList.filter(l => progress[l.id]).length;
+            const pct = lessonList.length ? Math.round((completed / lessonList.length) * 100) : 0;
+
+            document.getElementById('topProgress').style.width = pct + '%';
+            document.getElementById('progressLabel').textContent = pct + '% complete';
+
+            const certBtn = document.getElementById('certBtn');
+            const certBanner = document.getElementById('certBanner');
+            if (pct === 100) {
+                certBtn.classList.remove('d-none');
+                certBanner.classList.remove('d-none');
+            }
+
+            // Update enrollment progress in DB
+            if (currentUser) {
+                supabase.from('enrollments')
+                    .update({ progress_percent: pct, last_accessed: new Date().toISOString() })
+                    .eq('user_id', currentUser.id)
+                    .eq('course_id', courseId)
+                    .then(() => { });
+            }
+        }
+
+        function renderCurriculum() {
+            const sidebar = document.getElementById('curriculumSidebar');
+            if (!curriculum.length) {
+                sidebar.innerHTML = '<p class="text-secondary small px-1">No curriculum yet.</p>';
+                return;
+            }
+
+            sidebar.innerHTML = curriculum.map((mod, mi) => {
+                const completedInMod = (mod.lessons || []).filter(l => progress[l.id]).length;
+                const totalInMod = (mod.lessons || []).length;
+
+                return `
+    <div class="mb-3">
+      <div class="section-header mb-2 d-flex align-items-center justify-content-between"
+           onclick="this.nextElementSibling.classList.toggle('d-none')">
+        <div>
+          <div class="fw-semibold small text-white">${mod.title}</div>
+          <div class="text-secondary" style="font-size:.75rem">${completedInMod}/${totalInMod} completed</div>
+        </div>
+        <i class="bi bi-chevron-down text-secondary"></i>
+      </div>
+      <div>
+        ${(mod.lessons || []).map((lesson, li) => {
+                    const flatIdx = lessonList.findIndex(l => l.id === lesson.id);
+                    const isCompleted = progress[lesson.id];
+                    const isActive = flatIdx === currentIndex;
+                    const icon = isCompleted ? 'bi-check-circle-fill text-success' :
+                        lesson.content_type === 'video' ? 'bi-play-circle' :
+                            lesson.content_type === 'article' ? 'bi-file-text' : 'bi-card-checklist';
+                    return `
+          <div class="lesson-item d-flex align-items-center gap-2 mb-1 ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}"
+               onclick="loadLesson(${flatIdx})">
+            <i class="bi ${icon} lesson-icon" style="font-size:1rem;flex-shrink:0"></i>
+            <div class="flex-grow-1 min-width-0">
+              <div class="small text-white text-truncate">${lesson.title}</div>
+              <div style="font-size:.7rem" class="text-secondary">${lesson.duration_mins || 5} min</div>
+            </div>
+            ${lesson.is_preview ? '<span class="badge bg-info bg-opacity-15 text-info" style="font-size:.65rem">Preview</span>' : ''}
+          </div>`;
+                }).join('')}
+      </div>
+    </div>`;
+            }).join('');
+        }
+
+        async function claimCertificate() {
+            if (!currentUser) return;
+            const { data: existing } = await supabase.from('course_certificates')
+                .select('id').eq('user_id', currentUser.id).eq('course_id', courseId).single();
+            if (!existing) {
+                await supabase.from('course_certificates').insert([{
+                    user_id: currentUser.id,
+                    course_id: courseId
+                }]);
+            }
+            // Generate printable certificate
+            window.open(`certificate.html?course=${courseId}&user=${currentUser.id}`, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

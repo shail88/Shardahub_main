@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses | ShardaHub Education</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ShardaHub Core Assets -->
+    <link rel="stylesheet" href="../assets/css/core.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+</head>
+
+<body>
+    <!-- Dynamic Sidebar Integration -->
+    <div id="shardahub-sidebar"></div>
+
+    <div class="main-wrapper">
+        <div class="container-fluid p-0">
+            <!-- Hero -->
+            <div class="container-fluid py-4 mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-5 fw-bold mb-2">Explore <span class="text-gradient">Knowledge</span></h1>
+                        <p class="text-secondary">Master new skills with our premium courses and ebooks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="container-fluid mb-5">
+                <div class="d-flex gap-2 overflow-auto pb-2">
+                    <button class="btn filter-btn rounded-pill px-4 active" data-filter="all">All Items</button>
+                    <button class="btn filter-btn rounded-pill px-4" data-filter="video">Video Courses</button>
+                    <button class="btn filter-btn rounded-pill px-4" data-filter="ebook">E-Books</button>
+                    <button class="btn filter-btn rounded-pill px-4" data-filter="development">Development</button>
+                    <button class="btn filter-btn rounded-pill px-4" data-filter="business">Business</button>
+                    <button class="btn filter-btn rounded-pill px-4" data-filter="design">Design</button>
+                </div>
+            </div>
+
+            <!-- Course Grid -->
+            <div class="container-fluid">
+                <div class="row g-4" id="courseGrid">
+                    <!-- Items rendered by script.js -->
+                </div>
+            </div>
+
+            <div id="shardahub-footer"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/sharda-db.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/footer.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

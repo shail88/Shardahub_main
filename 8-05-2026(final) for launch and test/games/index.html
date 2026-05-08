@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games Hub — ShardaHub</title>
+    <meta name="description"
+        content="Play exclusive games on ShardaHub. Subscribe to Free, Pro, or Enterprise and unlock the full library.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="headerPlaceholder"></div>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero-section">
+        <div class="hero-glow"></div>
+        <div class="container py-5 text-center position-relative">
+            <span class="plan-badge plan-free d-inline-flex align-items-center gap-1 mb-3 px-3 py-2"
+                style="font-size:.8rem;border-radius:50px">
+                <i class="bi bi-controller"></i> Game Hub
+            </span>
+            <h1 class="display-4 fw-black mb-3">
+                Play. <span class="text-gradient">Subscribe.</span> Unlock.
+            </h1>
+            <p class="lead text-secondary mb-4 mx-auto" style="max-width:520px">
+                One subscription unlocks your entire game library. No demos. No source code sales. Just pure gaming.
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="#plans" class="btn btn-gradient px-4 py-2 fw-bold rounded-pill">
+                    <i class="bi bi-lightning-fill me-2"></i>View Plans
+                </a>
+                <a href="#games" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                    <i class="bi bi-grid me-2"></i>Browse Games
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PLAN CARDS ===== -->
+    <section id="plans" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-2">Choose Your Plan</h2>
+                <p class="text-secondary">Upgrade anytime. Cancel anytime. No hidden fees.</p>
+            </div>
+
+            <!-- User current plan indicator -->
+            <div id="currentPlanBanner" class="d-none mb-4">
+                <div class="glass rounded-3 p-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-person-check-fill text-info fs-4"></i>
+                    <div>
+                        <div class="small text-secondary">Your active plan</div>
+                        <div class="fw-bold" id="currentPlanLabel">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 justify-content-center" id="plansGrid">
+                <!-- Loaded from JS -->
+                <div class="col-12 text-center py-4">
+                    <div class="spinner-border text-info" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== GAMES GRID ===== -->
+    <section id="games" class="py-5" style="background:rgba(255,255,255,.015)">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+                <div>
+                    <h2 class="fw-bold mb-1">Game Library</h2>
+                    <p class="text-secondary small mb-0">
+                        <span id="gameCountLabel">Loading games...</span>
+                    </p>
+                </div>
+                <!-- Filter buttons -->
+                <div class="d-flex gap-2 flex-wrap" id="filterBar">
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 active"
+                        onclick="filterByPlan('all', this)">All</button>
+                    <button class="btn btn-sm rounded-pill px-3"
+                        style="background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3)"
+                        onclick="filterByPlan('free', this)">🆓 Free</button>
+                    <button class="btn btn-sm rounded-pill px-3"
+                        style="background:rgba(99,102,241,.15);color:#6366f1;border:1px solid rgba(99,102,241,.3)"
+                        onclick="filterByPlan('pro', this)">⚡ Pro</button>
+                    <button class="btn btn-sm rounded-pill px-3"
+                        style="background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)"
+                        onclick="filterByPlan('enterprise', this)">🏆 Enterprise</button>
+                </div>
+            </div>
+
+            <div class="row g-4" id="gamesGrid">
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-info" role="status"></div>
+                    <p class="text-secondary mt-3 small">Loading games...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== UPGRADE MODAL ===== -->
+    <div class="modal fade" id="upgradeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass border-0 rounded-4">
+                <div class="modal-header border-0 p-4">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-lock-fill text-warning me-2"></i>
+                        Upgrade to Play <span id="upgradeGameTitle" class="text-info"></span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-4 pb-4">
+                    <p class="text-secondary mb-4">This game requires a <strong id="upgradePlanRequired"
+                            class="text-white"></strong> subscription. Choose a plan below to unlock it.</p>
+                    <div class="row g-3" id="upgradeModalPlans"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== GAME DETAIL MODAL ===== -->
+    <div class="modal fade" id="gameModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass border-0 rounded-4">
+                <div class="modal-header border-0 p-4">
+                    <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-controller text-info"></i>
+                        <span id="gameModalTitle">Game Details</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <img id="gameModalImage" src="" alt="" class="w-100" style="max-height:300px;object-fit:cover">
+                    <div class="p-4">
+                        <p id="gameModalDesc" class="text-secondary mb-4"></p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <span class="glass px-3 py-2 rounded-3 small">
+                                <i class="bi bi-cpu me-1 text-info"></i>
+                                Genre: <strong id="gameModalGenre"></strong>
+                            </span>
+                            <span class="glass px-3 py-2 rounded-3 small">
+                                <i class="bi bi-people me-1 text-info"></i>
+                                Players: <strong id="gameModalPlayers"></strong>
+                            </span>
+                            <span class="glass px-3 py-2 rounded-3 small">
+                                <i class="bi bi-star me-1 text-warning"></i>
+                                Rating: <strong id="gameModalRating"></strong>
+                            </span>
+                        </div>
+                        <hr style="border-color:rgba(255,255,255,.1)">
+                        <div class="d-flex gap-3 flex-wrap mt-3" id="gameModalActions"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footerPlaceholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/footer.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

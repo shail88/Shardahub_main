@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details | ShardaHub</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ShardaHub Core Assets -->
+    <link rel="stylesheet" href="../assets/css/core.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/sharda-db.js"></script>
+    <script src="../assets/js/auth.js"></script>
+</head>
+
+<body>
+    <!-- Dynamic Sidebar Integration -->
+    <div id="shardahub-sidebar"></div>
+
+    <div class="main-wrapper">
+        <header
+            class="py-3 px-4 d-flex justify-content-between align-items-center border-bottom border-secondary glass sticky-top">
+            <h1 class="h4 mb-0 fw-bold">Course Details</h1>
+            <div class="d-flex gap-3 align-items-center">
+                <a href="../checkout.html" class="btn btn-sm btn-outline-light rounded-pill px-3"><i
+                        class="bi bi-arrow-left"></i> Back</a>
+            </div>
+        </header>
+
+        <div class="container-fluid py-5 px-md-5" id="courseDetails">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="product-hero p-5 mb-5 position-relative glass rounded-4">
+                        <h1 class="display-4 fw-bold mb-3" id="detailTitle">Course Title</h1>
+                        <p class="lead text-secondary mb-4" id="detailDesc">Course Description goes here...</p>
+
+                        <div class="d-flex align-items-center mb-4 text-secondary gap-4">
+                            <div><i class="bi bi-person-circle me-2 text-info"></i> <span
+                                    id="detailInstructor">Instructor</span></div>
+                            <div><i class="bi bi-clock me-2 text-info"></i> <span id="detailDuration">Duration</span>
+                            </div>
+                            <div><i class="bi bi-star-fill text-warning me-2"></i> 4.8 <span
+                                    class="small text-muted ms-1">(1,200 reviews)</span></div>
+                        </div>
+
+                        <div class="d-flex gap-3 mt-4 d-lg-none mb-4">
+                            <button class="btn btn-primary btn-lg w-100 rounded-pill fw-bold" id="mobileBuyBtn">Enroll
+                                Now</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3 class="fw-bold mb-4">Course Content</h3>
+                        <div class="accordion curriculum-accordion" id="curriculumAccordion">
+                            <div class="text-center py-4 text-secondary">
+                                <div class="spinner-border spinner-border-sm text-info me-2"></div>
+                                Loading curriculum...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Section -->
+                    <div class="mb-5">
+                        <h3 class="fw-bold mb-4">Student Feedback</h3>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="glass p-4 rounded-4 h-100">
+                                    <div class="d-flex gap-2 text-warning mb-2"><i class="bi bi-star-fill"></i><i
+                                            class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                                            class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                                    <p class="small text-secondary">"One of the best courses I've taken on ShardaHub.
+                                        The instructor explains complex concepts very simply."</p>
+                                    <div class="fw-bold small">- Rahul S.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="glass p-4 rounded-4 h-100">
+                                    <div class="d-flex gap-2 text-warning mb-2"><i class="bi bi-star-fill"></i><i
+                                            class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                                            class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
+                                    <p class="small text-secondary">"The projects were real-world applicable. I managed
+                                        to land a freelance gig right after finishing."</p>
+                                    <div class="fw-bold small">- Priya M.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sticky Widget (Udemy Style) -->
+                <div class="col-lg-4">
+                    <div class="sticky-widget" style="top: 100px;">
+                        <div class="glass p-4 rounded-4 border border-secondary shadow-lg">
+                            <img src="" id="detailThumb" class="img-fluid rounded-4 mb-4 border border-secondary"
+                                alt="Enroll Now">
+
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="fs-1 fw-bold text-white" id="detailPrice">₹499</span>
+                                    <span class="text-decoration-line-through text-secondary"
+                                        id="detailOgPrice">₹3,999</span>
+                                    <span class="text-success small fw-bold">85% off</span>
+                                </div>
+                                <div class="text-danger small fw-bold"><i class="bi bi-stopwatch me-1"></i> Special
+                                    Price for 24h</div>
+                            </div>
+
+                            <div class="d-grid gap-2 mb-4">
+                                <button class="btn btn-primary btn-lg py-3 rounded-pill fw-bold glow-effect"
+                                    id="buyNowBtn">Buy Now</button>
+                                <button class="btn btn-outline-light btn-lg py-3 rounded-pill fw-bold"
+                                    id="addToCartBtn">Add to Cart</button>
+                            </div>
+
+                            <h6 class="fw-bold mb-3 small">This course includes:</h6>
+                            <ul class="list-unstyled text-secondary small mb-0">
+                                <li class="mb-2"><i class="bi bi-journal-check me-2 text-info"></i> Full Lifetime Access
+                                </li>
+                                <li class="mb-2"><i class="bi bi-patch-check me-2 text-info"></i> Certificate of
+                                    Completion</li>
+                                <li class="mb-2"><i class="bi bi-infinity me-2 text-info"></i> Access on mobile and TV
+                                </li>
+                                <li><i class="bi bi-shield-lock me-2 text-info"></i> 30-Day Money-Back Guarantee</li>
+                            </ul>
+                        </div>
+
+                        <!-- Similar Courses -->
+                        <div class="mt-5">
+                            <h5 class="fw-bold mb-3">Similar Courses</h5>
+                            <div id="similarCourses" class="list-group gap-3">
+                                <!-- Dynamically added if needed -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="shardahub-footer"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/footer.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+
+</html>

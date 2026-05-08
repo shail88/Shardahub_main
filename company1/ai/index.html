@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools — ShardaHub</title>
+    <meta name="description"
+        content="Unlock powerful AI tools with multi-tier access plans. Free, Basic, Pro and Enterprise.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ai-accent: #0ea5e9;
+            --purple: #8b5cf6;
+            --gold: #f59e0b
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060b14;
+            color: #e2e8f0
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            backdrop-filter: blur(12px)
+        }
+
+        .tier-card {
+            border: 2px solid rgba(255, 255, 255, .08);
+            border-radius: 20px;
+            transition: all .3s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .tier-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 60px rgba(14, 165, 233, .25)
+        }
+
+        .tier-card.popular {
+            border-color: var(--ai-accent);
+            box-shadow: 0 0 30px rgba(14, 165, 233, .2)
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: #fff;
+            font-size: .7rem;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 0 0 10px 10px;
+            letter-spacing: .05em
+        }
+
+        .feature-check {
+            color: #10b981
+        }
+
+        .feature-x {
+            color: rgba(255, 255, 255, .2)
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            color: #fff
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff
+        }
+
+        .ai-tool-card {
+            cursor: pointer;
+            transition: all .25s;
+            border-radius: 16px
+        }
+
+        .ai-tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(14, 165, 233, .2)
+        }
+
+        .hero-bg {
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(14, 165, 233, .12) 0%, transparent 70%)
+        }
+
+        .toggle-btn.active {
+            background: rgba(14, 165, 233, .2);
+            color: var(--ai-accent);
+            border-color: var(--ai-accent)
+        }
+    </style>
+</head>
+
+<body>
+    <div id="headerPlaceholder"></div>
+
+    <!-- Hero -->
+    <section class="hero-bg py-5">
+        <div class="container py-4 text-center">
+            <span
+                class="badge bg-info bg-opacity-15 text-info border border-info border-opacity-25 rounded-pill px-3 py-2 mb-3">
+                <i class="bi bi-robot me-1"></i>AI Lab
+            </span>
+            <h1 class="display-5 fw-bold mb-3">Supercharge with <span style="color:var(--ai-accent)">AI Tools</span>
+            </h1>
+            <p class="text-secondary lead mb-4">Resume builder, image generator, code assistant, content writer & more.
+            </p>
+            <div id="userTierBadge" class="d-none"></div>
+        </div>
+    </section>
+
+    <!-- Tool Cards -->
+    <section class="py-4">
+        <div class="container">
+            <h5 class="fw-bold mb-4">Available AI Tools</h5>
+            <div id="aiToolGrid" class="row g-3">
+                <div class="col-12 text-center py-4">
+                    <div class="spinner-border text-info" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Plans -->
+    <section class="py-5" id="pricing">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-2">Choose Your Plan</h2>
+                <p class="text-secondary">Upgrade anytime. Cancel anytime.</p>
+                <!-- Monthly/Annual Toggle -->
+                <div class="d-flex align-items-center justify-content-center gap-3 mt-3">
+                    <span class="small text-secondary">Monthly</span>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="annualToggle" role="switch"
+                            style="width:3rem;height:1.5rem">
+                    </div>
+                    <span class="small text-secondary">Annual <span class="badge bg-success">Save 30%</span></span>
+                </div>
+            </div>
+
+            <div class="row g-4 justify-content-center" id="tierCards">
+                <div class="col-12 text-center py-4">
+                    <div class="spinner-border text-info" role="status"></div>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="mt-5">
+                <h5 class="fw-bold text-center mb-4">Full Feature Comparison</h5>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle" id="compareTable">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footerPlaceholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/footer.js"></script>
+    <script src="../assets/js/sharda-db.js"></script>
+    <script src="../assets/js/sharda-access.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="../assets/js/payments.js"></script>
+    <script>
+        window.ShardaBaseUrl = '../';
+        let isAnnual = false;
+        let aiTiers = [];
+
+        async function init() {
+            await waitForAuth();
+            loadAiTools();
+            loadAiTiers();
+        }
+
+        async function loadAiTools() {
+            const { data: tools } = await supabase.from('products').select('*').eq('product_type', 'ai').eq('is_active', true);
+            const grid = document.getElementById('aiToolGrid');
+
+            if (!tools || tools.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center text-secondary py-5">No AI tools found. Add some in the Admin Panel!</div>';
+                return;
+            }
+
+            grid.innerHTML = tools.map(t => {
+                const color = t.id.includes('resume') ? '#0ea5e9' : (t.id.includes('image') ? '#8b5cf6' : '#10b981');
+                return `
+                <div class="col-sm-6 col-lg-3">
+                    <div class="glass ai-tool-card p-4 h-100" onclick="window.location.href='../product.html?id=${t.id}'">
+                        <div class="rounded-3 d-inline-flex p-3 mb-3" style="background:${color}22">
+                            <i class="bi ${t.icon || 'bi-robot'} fs-3" style="color:${color}"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1">${t.title}</h6>
+                        <p class="text-secondary small mb-2">${t.tagline || t.description || ''}</p>
+                        <span class="badge ${t.price_inr === 0 ? 'bg-success' : 'bg-info'} bg-opacity-15 text-${t.price_inr === 0 ? 'success' : 'info'}">
+                          ${t.price_inr === 0 ? 'Free' : 'From ₹' + t.price_inr.toLocaleString()}
+                        </span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function loadAiTiers() {
+            // Fetch products of type AI that have tiers
+            const { data: products } = await supabase.from('products').select('*, product_tiers(*)').eq('product_type', 'ai').eq('is_active', true);
+
+            if (!products || products.length === 0) return;
+
+            // Find a product that acts as the main subscription (e.g., 'resume-ai' or a dedicated 'ai-subscription')
+            const mainAI = products.find(p => p.product_tiers && p.product_tiers.length > 0) || products[0];
+            if (!mainAI || !mainAI.product_tiers) return;
+
+            aiTiers = mainAI.product_tiers;
+            renderTierCards();
+        }
+
+        function renderTierCards() {
+            const container = document.getElementById('tierCards');
+            if (aiTiers.length === 0) {
+                container.innerHTML = '<div class="col-12 text-center text-secondary py-5">No pricing plans found.</div>';
+                return;
+            }
+
+            container.innerHTML = aiTiers.sort((a, b) => a.price_inr - b.price_inr).map(t => {
+                const monthlyPrice = t.price_inr;
+                const annualPrice = Math.round(monthlyPrice * 0.7 * 12); // Sample 30% discount for annual
+                const price = isAnnual ? annualPrice : monthlyPrice;
+                const period = isAnnual ? '/yr' : '/mo';
+
+                const color = t.price_inr === 0 ? '#10b981' : (t.price_inr > 1000 ? '#8b5cf6' : '#0ea5e9');
+                const popular = t.name.toLowerCase().includes('pro') || t.name.toLowerCase().includes('advance');
+
+                return `
+                <div class="col-md-6 col-lg-3">
+                  <div class="tier-card p-4 h-100 d-flex flex-column" style="background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.1)">
+                    ${popular ? '<div class="popular-badge">⭐ MOST POPULAR</div>' : ''}
+                    <div class="rounded-3 d-inline-flex p-3 mb-3" style="background:${color}22;width:fit-content">
+                      <i class="bi ${t.price_inr === 0 ? 'bi-stars' : 'bi-rocket'} fs-3" style="color:${color}"></i>
+                    </div>
+                    <h5 class="fw-bold mb-1">${t.name}</h5>
+                    <div class="mb-3">
+                      <span class="display-6 fw-bold" style="color:${color}">
+                        ${price === 0 ? 'Free' : '₹' + price.toLocaleString()}
+                      </span>
+                      ${price > 0 ? `<span class="text-secondary small">${period}</span>` : ''}
+                    </div>
+                    <ul class="list-unstyled flex-grow-1 mb-4">
+                      ${(t.features || []).map(f => `
+                      <li class="d-flex align-items-start gap-2 mb-2 small">
+                        <i class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0" style="color:#10b981"></i>
+                        <span>${f}</span>
+                      </li>`).join('')}
+                    </ul>
+                    <button class="btn ${popular ? 'btn-gradient' : 'btn-outline-info'} rounded-pill w-100 fw-semibold"
+                            onclick="handleAIPlanSelect('${t.name}',${price}, '${t.id}')">
+                      ${t.price_inr === 0 ? 'Get Started' : 'Subscribe Now'}
+                    </button>
+                  </div>
+                </div>`;
+            }).join('');
+
+            // We'll skip the comparison table for now as it's hard to generate dynamically 
+            // without a structured feature list schema, OR we could hide it if no data.
+            document.querySelector('.mt-5').classList.add('d-none');
+        }
+
+        async function handleAIPlanSelect(name, price, tierId) {
+            const user = window.SubpassAuth?.user;
+            if (!user) { window.location.href = '../login.html?redirect=' + encodeURIComponent(location.href); return; }
+
+            if (price === 0) {
+                await supabase.from('user_subscriptions').upsert([{
+                    user_id: user.id,
+                    product_id: 'ai-subscription',
+                    tier_id: tierId,
+                    status: 'active'
+                }]);
+                ShardaPayments.showToast(name + ' plan activated!', 'success');
+                setTimeout(() => window.location.href = 'dashboard.html', 1500);
+                return;
+            }
+
+            const finalPrice = isAnnual ? Math.round(price / 12) : price; // quickBuy expects monthly equivalent or total?
+            // Usually quickBuy processes the current transaction.
+
+            await ShardaPayments.quickBuy({
+                id: 'ai-subscription',
+                name: 'AI ' + name + (isAnnual ? ' (Annual)' : ' (Monthly)'),
+                price: price,
+                icon: 'bi-robot',
+                tierId: tierId,
+                durationDays: isAnnual ? 365 : 30,
+                section: 'ai'
+            }, 'ai');
+        }
+
+        document.getElementById('annualToggle').addEventListener('change', e => {
+            isAnnual = e.target.checked;
+            renderTierCards();
+        });
+
+        function waitForAuth() { return new Promise(r => { if (window.SubpassAuth?.ready) window.SubpassAuth.ready.then(r); else setTimeout(r, 800); }); }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

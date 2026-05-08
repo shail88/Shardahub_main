@@ -1,0 +1,8 @@
+.ai-hero {
+    background: radial-gradient(circle at top right, rgba(6, 182, 212, 0.15) 0%, rgba(15, 23, 42, 0) 50%);
+    border: 1px solid rgba(6, 182, 212, 0.1);
+}
+
+.tool-card {
+    border-top: 4px solid var(--ai-accent);
+}

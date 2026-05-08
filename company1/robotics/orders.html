@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Robotics Orders — ShardaHub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060b14;
+            color: #e2e8f0
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08)
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            color: #fff
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff
+        }
+
+        .order-card {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04);
+            transition: border .2s
+        }
+
+        .order-card:hover {
+            border-color: rgba(14, 165, 233, .3)
+        }
+
+        .status-pill {
+            font-size: .75rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-weight: 600
+        }
+
+        .status-paid {
+            background: rgba(16, 185, 129, .15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, .3)
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, .15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, .3)
+        }
+
+        .status-shipped {
+            background: rgba(14, 165, 233, .15);
+            color: #0ea5e9;
+            border: 1px solid rgba(14, 165, 233, .3)
+        }
+
+        .status-delivered {
+            background: rgba(139, 92, 246, .15);
+            color: #8b5cf6;
+            border: 1px solid rgba(139, 92, 246, .3)
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, .15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, .3)
+        }
+
+        .timeline-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .82rem;
+            opacity: .4;
+            transition: .2s
+        }
+
+        .timeline-step.done {
+            opacity: 1
+        }
+
+        .timeline-step.active {
+            opacity: 1;
+            font-weight: 700
+        }
+
+        .timeline-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #64748b;
+            flex-shrink: 0
+        }
+
+        .timeline-step.done .timeline-dot {
+            background: #10b981
+        }
+
+        .timeline-step.active .timeline-dot {
+            background: #0ea5e9;
+            box-shadow: 0 0 6px #0ea5e9
+        }
+
+        .product-thumb {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 10px
+        }
+
+        #successBanner {
+            display: none
+        }
+    </style>
+</head>
+
+<body>
+    <div id="headerPlaceholder"></div>
+
+    <!-- Success banner (shown after successful checkout) -->
+    <div id="successBanner" class="container py-4">
+        <div class="rounded-4 p-4 d-flex align-items-center gap-3"
+            style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3)">
+            <i class="bi bi-check-circle-fill text-success fs-2"></i>
+            <div>
+                <div class="fw-bold text-success">Order Placed Successfully! 🎉</div>
+                <div class="small text-secondary mt-1">Your order has been confirmed and will be shipped soon. Check
+                    your email for the receipt.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+            <div>
+                <h4 class="fw-bold mb-0">My Robotics Orders</h4>
+                <div class="small text-secondary" id="orderCountLabel">Loading...</div>
+            </div>
+            <a href="index.html" class="btn btn-outline-info rounded-pill px-3 btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Continue Shopping
+            </a>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+            <button class="btn btn-sm btn-outline-info active rounded-pill px-3" onclick="filterOrders('all',this)">All
+                Orders</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                onclick="filterOrders('paid',this)">Confirmed</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                onclick="filterOrders('shipped',this)">Shipped</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                onclick="filterOrders('delivered',this)">Delivered</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                onclick="filterOrders('cancelled',this)">Cancelled</button>
+        </div>
+
+        <div id="ordersContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-info" role="status"></div>
+                <div class="text-secondary small mt-2">Loading your orders...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal fade" id="orderDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content bg-dark border-secondary">
+                <div class="modal-header border-secondary">
+                    <h6 class="modal-title fw-bold"><i class="bi bi-bag me-2 text-info"></i>Order Details</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="orderDetailBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footerPlaceholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/footer.js"></script>
+    <script src="../assets/js/sharda-db.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="../assets/js/payments.js"></script>
+    <script>
+        window.ShardaBaseUrl = '../';
+        let allOrders = [];
+        let currentUser = null;
+
+        async function init() {
+            // Show success banner if redirected from checkout
+            if (new URLSearchParams(location.search).get('ordered') === '1') {
+                document.getElementById('successBanner').style.display = 'block';
+                window.scrollTo(0, 0);
+                // Clean URL
+                history.replaceState({}, '', location.pathname);
+            }
+
+            await new Promise(r => { if (window.SubpassAuth?.ready) window.SubpassAuth.ready.then(r); else setTimeout(r, 800); });
+            currentUser = window.SubpassAuth?.user;
+            if (!currentUser) { window.location.href = '../login.html?redirect=' + encodeURIComponent(location.href); return; }
+            await loadOrders();
+        }
+
+        async function loadOrders() {
+            const orders = await ShardaDB.getUserOrders(currentUser.id, 'robotic');
+            allOrders = orders;
+            document.getElementById('orderCountLabel').textContent = orders.length + ' order' + (orders.length !== 1 ? 's' : '');
+            renderOrders(orders);
+        }
+
+        function renderOrders(orders) {
+            const container = document.getElementById('ordersContainer');
+            if (!orders.length) {
+                container.innerHTML = `<div class="text-center py-5">
+      <i class="bi bi-bag display-3 text-secondary mb-3 d-block"></i>
+      <p class="text-secondary">No orders in this category.</p>
+      <a href="index.html" class="btn btn-gradient rounded-pill px-4">Shop Now</a>
+    </div>`; return;
+            }
+            container.innerHTML = orders.map(o => {
+                const statusClass = 'status-' + (o.status || 'pending');
+                const statusLabel = { 'paid': 'Order Confirmed', 'shipped': 'Shipped', 'delivered': 'Delivered', 'cancelled': 'Cancelled', 'pending': 'Processing' }[o.status] || (o.status || 'Pending');
+                const steps = ['paid', 'shipped', 'delivered'];
+                const si = steps.indexOf(o.status);
+                const addr = o.shipping_addresses;
+                return `<div class="order-card p-4 mb-3">
+      <!-- Header -->
+      <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div>
+          <div class="small text-secondary">Order #${o.id?.substring(0, 12).toUpperCase()}</div>
+          <div class="small text-secondary mt-1">${new Date(o.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+        </div>
+        <span class="status-pill ${statusClass}">${statusLabel}</span>
+      </div>
+
+      <!-- Items preview -->
+      <div class="d-flex gap-2 mb-3 flex-wrap">
+        ${(o.order_items || []).slice(0, 3).map(item => `
+          <div class="d-flex align-items-center gap-2">
+            <img src="${sanitizeImg(item.products?.image_url)}" class="product-thumb" alt="" onerror="this.onerror=null; this.src=window.SHARDA_PLACEHOLDER;">
+            <div>
+              <div class="small fw-medium" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.products?.title || 'Product'}</div>
+              <div class="small text-secondary">Qty ${item.quantity || 1} · ₹${((item.price_at_purchase || 0) * (item.quantity || 1)).toLocaleString()}</div>
+            </div>
+          </div>`).join('')}
+        ${(o.order_items || []).length > 3 ? `<div class="d-flex align-items-center text-secondary small">+${(o.order_items || []).length - 3} more</div>` : ''}
+      </div>
+
+      <!-- Shipment Timeline (for non-cancelled) -->
+      ${o.status !== 'cancelled' ? `
+      <div class="d-flex gap-3 mb-3">
+        ${steps.map((s, idx) => {
+                    const isDone = si > idx;
+                    const isActive = si === idx;
+                    const labels = { paid: 'Confirmed', shipped: 'Shipped', delivered: 'Delivered' };
+                    return `<div class="timeline-step ${isDone ? 'done' : isActive ? 'active' : ''}">
+            <div class="timeline-dot"></div>
+            <span>${labels[s]}</span>
+          </div>`;
+                }).join('<div style="flex:1;height:1px;background:rgba(255,255,255,.1);align-self:center;margin-top:0"></div>')}
+      </div>`: ''}
+
+      <!-- Footer -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pt-2 border-top border-secondary border-opacity-25">
+        <div>
+          <span class="fw-bold text-white">₹${(o.total_amount || 0).toLocaleString()}</span>
+          ${addr ? `<span class="ms-3 small text-secondary"><i class="bi bi-geo-alt me-1"></i>${addr.city}, ${addr.state}</span>` : ''}
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="viewOrderDetail('${o.id}')">
+            <i class="bi bi-eye me-1"></i>View Details
+          </button>
+          ${o.status === 'delivered' ? '<button class="btn btn-sm btn-outline-success rounded-pill px-3"><i class="bi bi-star me-1"></i>Review</button>' : ''}
+        </div>
+      </div>
+    </div>`;
+            }).join('');
+        }
+
+        function filterOrders(status, btn) {
+            document.querySelectorAll('[onclick^="filterOrders"]').forEach(b => { b.className = 'btn btn-sm btn-outline-secondary rounded-pill px-3'; });
+            btn.className = 'btn btn-sm btn-outline-info active rounded-pill px-3';
+            const filtered = status === 'all' ? allOrders : allOrders.filter(o => o.status === status);
+            document.getElementById('orderCountLabel').textContent = filtered.length + ' order' + (filtered.length !== 1 ? 's' : '');
+            renderOrders(filtered);
+        }
+
+        async function viewOrderDetail(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            const addr = order.shipping_addresses;
+            const modal = new bootstrap.Modal(document.getElementById('orderDetailModal'));
+            document.getElementById('orderDetailBody').innerHTML = `
+  <div class="mb-3">
+    <div class="small text-secondary mb-1">Order ID</div>
+    <code class="text-info">${order.id}</code>
+  </div>
+  ${addr ? `<div class="mb-3">
+    <div class="small text-secondary mb-1">Shipping Address</div>
+    <div class="fw-medium">${addr.full_name}</div>
+    <div class="small text-secondary">${addr.address_line1}${addr.address_line2 ? ', ' + addr.address_line2 : ''}<br>${addr.city}, ${addr.state} - ${addr.pincode}<br>${addr.mobile}</div>
+  </div>`: ''}
+  <div class="mb-3">
+    <div class="small text-secondary mb-2">Items Ordered</div>
+    ${(order.order_items || []).map(item => `
+    <div class="d-flex align-items-center gap-3 mb-2 p-2 rounded-3" style="background:rgba(255,255,255,.04)">
+      <img src="${sanitizeImg(item.products?.image_url)}" class="rounded-2 flex-shrink-0" width="48" height="48" style="object-fit:cover" alt="" onerror="this.onerror=null; this.src=window.SHARDA_PLACEHOLDER;">
+      <div class="flex-grow-1">
+        <div class="small fw-medium">${item.products?.title || 'Product'}</div>
+        <div class="small text-secondary">Qty: ${item.quantity || 1}</div>
+      </div>
+      <div class="small fw-bold text-info">₹${((item.price_at_purchase || 0) * (item.quantity || 1)).toLocaleString()}</div>
+    </div>`).join('')}
+  </div>
+  <div class="d-flex justify-content-between fw-bold fs-5 pt-2 border-top border-secondary border-opacity-25">
+    <span>Total Paid</span>
+    <span class="text-white">₹${(order.total_amount || 0).toLocaleString()}</span>
+  </div>`;
+            modal.show();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

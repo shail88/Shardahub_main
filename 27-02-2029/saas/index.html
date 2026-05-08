@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Solutions — ShardaHub</title>
+    <meta name="description" content="Powerful SaaS tools with subscription plans. Starter to Enterprise.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #060b14;
+            color: #e2e8f0
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            backdrop-filter: blur(12px)
+        }
+
+        .tier-card {
+            border: 2px solid rgba(255, 255, 255, .08);
+            border-radius: 20px;
+            transition: all .3s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .tier-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 60px rgba(14, 165, 233, .25)
+        }
+
+        .tier-card.popular {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 30px rgba(14, 165, 233, .2)
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: #fff;
+            font-size: .7rem;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 0 0 10px 10px
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            color: #fff
+        }
+
+        .btn-gradient:hover {
+            opacity: .9;
+            color: #fff
+        }
+
+        .feature-check {
+            color: #10b981
+        }
+
+        .hero-bg {
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 102, 241, .12) 0%, transparent 70%)
+        }
+
+        .saas-card {
+            cursor: pointer;
+            transition: all .25s;
+            border-radius: 16px
+        }
+
+        .saas-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(99, 102, 241, .2)
+        }
+
+        .testimonial {
+            border-left: 3px solid #6366f1;
+            border-radius: 0 12px 12px 0
+        }
+    </style>
+</head>
+
+<body>
+    <div id="headerPlaceholder"></div>
+
+    <!-- Hero -->
+    <section class="hero-bg py-5">
+        <div class="container py-4 text-center">
+            <span class="badge bg-purple bg-opacity-15 border rounded-pill px-3 py-2 mb-3"
+                style="background:rgba(99,102,241,.15)!important;color:#8b5cf6;border-color:rgba(99,102,241,.3)!important">
+                <i class="bi bi-grid-3x3-gap me-1"></i>SaaS Hub
+            </span>
+            <h1 class="display-5 fw-bold mb-3">Enterprise <span style="color:#6366f1">SaaS Tools</span></h1>
+            <p class="text-secondary lead mb-4">Productivity, automation and analytics tools — all under one
+                subscription.</p>
+            <div id="currentPlanBanner" class="glass d-inline-block px-4 py-2 rounded-pill d-none">
+                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                <span id="currentPlanText" class="fw-semibold"></span>
+                <a href="dashboard.html" class="btn btn-sm btn-outline-info rounded-pill ms-3 px-3">Dashboard</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SaaS Products -->
+    <section class="py-4">
+        <div class="container">
+            <h5 class="fw-bold mb-4">🛠 SaaS Products</h5>
+            <div class="row g-3" id="saasProducts">
+                ${[
+                {id:'saas-crm',icon:'bi-people',color:'#6366f1',title:'CRM Pro',desc:'Customer relationship management
+                dashboard'},
+                {id:'saas-analytics',icon:'bi-bar-chart',color:'#0ea5e9',title:'Analytics Suite',desc:'Real-time
+                business intelligence'},
+                {id:'saas-automation',icon:'bi-gear',color:'#10b981',title:'Workflow Automator',desc:'Automate
+                repetitive tasks & pipelines'},
+                {id:'saas-invoicing',icon:'bi-receipt',color:'#f59e0b',title:'Invoice Manager',desc:'Create, send and
+                track invoices'},
+                ].map(t=>`
+                <div class="col-sm-6 col-lg-3">
+                    <div class="glass saas-card p-4 h-100">
+                        <div class="rounded-3 p-3 mb-3 d-inline-flex" style="background:${t.color}22">
+                            <i class="bi ${t.icon} fs-3" style="color:${t.color}"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1">${t.title}</h6>
+                        <p class="text-secondary small mb-0">${t.desc}</p>
+                    </div>
+                </div>`).join('')}
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Tiers -->
+    <section class="py-5" id="pricing">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-2">Subscription Plans</h2>
+                <p class="text-secondary">All tools included in every paid plan.</p>
+                <div class="d-flex align-items-center justify-content-center gap-3 mt-3">
+                    <span class="small text-secondary">Monthly</span>
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="annualToggle"
+                            style="width:3rem;height:1.5rem">
+                    </div>
+                    <span class="small text-secondary">Annual <span class="badge bg-success">Save 25%</span></span>
+                </div>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Starter Free -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="tier-card p-4 h-100 d-flex flex-column"
+                        style="background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.3)">
+                        <div class="rounded-3 d-inline-flex p-3 mb-3"
+                            style="background:rgba(16,185,129,.12);width:fit-content">
+                            <i class="bi bi-person fs-2 text-success"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1">Starter</h5>
+                        <div class="mb-3"><span class="display-6 fw-bold text-success">Free</span></div>
+                        <ul class="list-unstyled flex-grow-1 mb-4 small">
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>2 SaaS tools
+                                access</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>100 records
+                                limit</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>Community
+                                support</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-x-circle text-secondary mt-1 flex-shrink-0"></i><span
+                                    class="text-secondary">No API access</span></li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-x-circle text-secondary mt-1 flex-shrink-0"></i><span
+                                    class="text-secondary">No exports</span></li>
+                        </ul>
+                        <button class="btn btn-outline-success rounded-pill w-100 fw-semibold"
+                            onclick="handleSaaSPlan('Starter',0,30)">Get Started</button>
+                    </div>
+                </div>
+                <!-- Growth -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="tier-card p-4 h-100 d-flex flex-column"
+                        style="background:rgba(14,165,233,.06);border-color:rgba(14,165,233,.3)">
+                        <div class="rounded-3 d-inline-flex p-3 mb-3"
+                            style="background:rgba(14,165,233,.12);width:fit-content">
+                            <i class="bi bi-rocket fs-2 text-info"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1">Growth</h5>
+                        <div class="mb-3">
+                            <span class="display-6 fw-bold text-info plan-price" data-monthly="999"
+                                data-annual="749">₹999</span>
+                            <span class="text-secondary small plan-period">/mo</span>
+                        </div>
+                        <ul class="list-unstyled flex-grow-1 mb-4 small">
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>All 4 SaaS
+                                tools</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>10,000 records
+                            </li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>CSV/PDF exports
+                            </li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>Email support
+                            </li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-x-circle text-secondary mt-1 flex-shrink-0"></i><span
+                                    class="text-secondary">No API</span></li>
+                        </ul>
+                        <button class="btn btn-outline-info rounded-pill w-100 fw-semibold"
+                            onclick="handleSaaSPlan('Growth',999,30)">Start Growth</button>
+                    </div>
+                </div>
+                <!-- Business (Popular) -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="tier-card popular p-4 h-100 d-flex flex-column" style="background:rgba(99,102,241,.08)">
+                        <div class="popular-badge">⭐ MOST POPULAR</div>
+                        <div class="rounded-3 d-inline-flex p-3 mb-3 mt-2"
+                            style="background:rgba(99,102,241,.15);width:fit-content">
+                            <i class="bi bi-building fs-2" style="color:#6366f1"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1">Business</h5>
+                        <div class="mb-3">
+                            <span class="display-6 fw-bold plan-price" data-monthly="2999" data-annual="2249"
+                                style="color:#6366f1">₹2999</span>
+                            <span class="text-secondary small plan-period">/mo</span>
+                        </div>
+                        <ul class="list-unstyled flex-grow-1 mb-4 small">
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>Everything in
+                                Growth</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>Unlimited
+                                records</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>REST API access
+                            </li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>3 team seats
+                            </li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>Priority
+                                support</li>
+                        </ul>
+                        <button class="btn btn-gradient rounded-pill w-100 fw-semibold"
+                            onclick="handleSaaSPlan('Business',2999,30)">Go Business</button>
+                    </div>
+                </div>
+                <!-- Enterprise -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="tier-card p-4 h-100 d-flex flex-column"
+                        style="background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.3)">
+                        <div class="rounded-3 d-inline-flex p-3 mb-3"
+                            style="background:rgba(245,158,11,.12);width:fit-content">
+                            <i class="bi bi-shield-check fs-2 text-warning"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1">Enterprise</h5>
+                        <div class="mb-3">
+                            <span class="display-6 fw-bold text-warning plan-price" data-monthly="7999"
+                                data-annual="5999">₹7999</span>
+                            <span class="text-secondary small plan-period">/mo</span>
+                        </div>
+                        <ul class="list-unstyled flex-grow-1 mb-4 small">
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>Everything in
+                                Business</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>Unlimited team
+                                seats</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>White-label
+                                option</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>Custom
+                                integrations</li>
+                            <li class="d-flex gap-2 mb-2"><i
+                                    class="bi bi-check-circle-fill feature-check mt-1 flex-shrink-0"></i>Dedicated
+                                manager</li>
+                        </ul>
+                        <button class="btn btn-outline-warning rounded-pill w-100 fw-semibold"
+                            onclick="handleSaaSPlan('Enterprise',7999,30)">Contact Sales</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footerPlaceholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../lib/supabase.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/footer.js"></script>
+    <script src="../assets/js/sharda-access.js"></script>
+    <script src="../assets/js/payments.js"></script>
+    <script>
+        window.ShardaBaseUrl = '../';
+        let isAnnual = false;
+
+        async function init() {
+            await new Promise(r => { if (window.SubpassAuth?.ready) window.SubpassAuth.ready.then(r); else setTimeout(r, 800); });
+            const user = window.SubpassAuth?.user;
+            if (!user) return;
+            // Check if user has active SaaS sub
+            const access = await ShardaAccess.checkSaaS(user.id, 'saas-hub');
+            if (access.allowed) {
+                document.getElementById('currentPlanBanner').classList.remove('d-none');
+                document.getElementById('currentPlanText').textContent = 'Active: ' + access.plan + (access.daysLeft ? ' (' + access.daysLeft + ' days left)' : '');
+            }
+        }
+
+        document.getElementById('annualToggle').addEventListener('change', e => {
+            isAnnual = e.target.checked;
+            document.querySelectorAll('.plan-price').forEach(el => {
+                const price = isAnnual ? el.dataset.annual : el.dataset.monthly;
+                el.textContent = '₹' + parseInt(price).toLocaleString();
+            });
+            document.querySelectorAll('.plan-period').forEach(el => el.textContent = isAnnual ? '/mo (billed annually)' : '/mo');
+        });
+
+        async function handleSaaSPlan(name, price, durationDays) {
+            const user = window.SubpassAuth?.user;
+            if (!user) { window.location.href = '../login.html?redirect=' + encodeURIComponent(location.href); return; }
+            if (price === 0) {
+                await supabase.from('user_subscriptions').upsert([{ user_id: user.id, product_id: 'saas-hub', status: 'active' }]);
+                ShardaPayments.showToast('Starter plan activated!', 'success');
+                window.location.href = 'dashboard.html'; return;
+            }
+            const finalPrice = isAnnual ? Math.round(price * .75) : price;
+            const days = isAnnual ? 365 : durationDays;
+            await ShardaPayments.quickBuy({
+                id: 'saas-hub', name: 'SaaS ' + name + ' (' + (isAnnual ? 'Annual' : 'Monthly') + ')',
+                price: finalPrice, icon: 'bi-grid-3x3-gap', tierId: null, durationDays: days, section: 'saas'
+            }, 'saas');
+            setTimeout(() => window.location.href = 'dashboard.html', 2500);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

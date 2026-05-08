@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Hub | ShardaHub Ecosystem</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ShardaHub Core Assets -->
+    <link rel="stylesheet" href="assets/css/core.css">
+    <style>
+        .hub-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hub-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--ai-accent);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(14, 165, 233, 0.1);
+        }
+
+        .hub-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--ai-accent), #818cf8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .floating-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Dynamic Sidebar Integration -->
+    <div id="shardahub-sidebar"></div>
+
+    <div class="main-wrapper">
+        <div class="container-fluid py-5 px-md-5">
+            <div class="d-flex justify-content-between align-items-end mb-5">
+                <div>
+                    <h5 class="text-info fw-bold mb-1">WELCOME BACK</h5>
+                    <h1 class="display-5 fw-bold text-white mb-0" id="user-greeting">User</h1>
+                </div>
+                <div class="text-end d-none d-md-block">
+                    <div class="badge bg-info-subtle text-info rounded-pill px-3 py-2">
+                        <i class="bi bi-shield-check me-1"></i> Unified Subpass Active
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-secondary small fw-bold">AI CREDITS</span>
+                            <i class="bi bi-cpu text-info"></i>
+                        </div>
+                        <h2 class="fw-bold mb-0" id="stat-ai-credits">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-secondary small fw-bold">ENROLLED</span>
+                            <i class="bi bi-mortarboard text-info"></i>
+                        </div>
+                        <h2 class="fw-bold mb-0" id="stat-courses">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-secondary small fw-bold">SAVINGS</span>
+                            <i class="bi bi-wallet2 text-info"></i>
+                        </div>
+                        <h2 class="fw-bold mb-0">₹0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-secondary small fw-bold">STATUS</span>
+                            <i class="bi bi-activity text-info"></i>
+                        </div>
+                        <h2 class="fw-bold mb-0" id="stat-role">User</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hub Grid -->
+            <h4 class="fw-bold mb-4">Jump To Your Spaces</h4>
+            <div class="row g-4">
+                <!-- Education Card -->
+                <div class="col-md-4">
+                    <a href="course/dashboard.html" class="text-decoration-none">
+                        <div class="glass hub-card p-4 rounded-5 h-100">
+                            <div class="hub-icon"><i class="bi bi-mortarboard-fill"></i></div>
+                            <h3 class="fw-bold text-white">Education Hub</h3>
+                            <p class="text-secondary">Access your enrolled courses, certificates, and learning tools.
+                            </p>
+                            <div class="d-flex align-items-center gap-2 mt-4 text-info fw-bold">
+                                <span>Go to Academy</span> <i class="bi bi-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- AI Hub -->
+                <div class="col-md-4">
+                    <a href="ai/index.html" class="text-decoration-none">
+                        <div class="glass hub-card p-4 rounded-5 h-100">
+                            <div class="floating-badge"><span class="badge bg-info text-dark">PRO</span></div>
+                            <div class="hub-icon"><i class="bi bi-cpu-fill"></i></div>
+                            <h3 class="fw-bold text-white">ShardaAI Tools</h3>
+                            <p class="text-secondary">Explore flagship AI tools like Resume Builder, Image Gen, and
+                                more.</p>
+                            <div class="d-flex align-items-center gap-2 mt-4 text-info fw-bold">
+                                <span>Launch Tools</span> <i class="bi bi-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Shopping -->
+                <div class="col-md-4">
+                    <a href="shop/index.html" class="text-decoration-none">
+                        <div class="glass hub-card p-4 rounded-5 h-100">
+                            <div class="hub-icon"><i class="bi bi-bag-heart-fill"></i></div>
+                            <h3 class="fw-bold text-white">E-Shop</h3>
+                            <p class="text-secondary">Manage your orders, digital licensing, and wishlist.</p>
+                            <div class="d-flex align-items-center gap-2 mt-4 text-info fw-bold">
+                                <span>Open Shop</span> <i class="bi bi-arrow-right"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div id="shardahub-footer"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/footer.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+</body>
+
+</html>
